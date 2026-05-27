@@ -1,0 +1,15 @@
+.badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  border: 1px solid;
+  font-weight: 500;
+}
+
+.badge--amber { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
+.badge--green { color: var(--green); border-color: rgba(46,168,126,0.3); background: var(--green-dim); }
+.badge--red   { color: var(--red);   border-color: rgba(200,75,60,0.3); background: var(--red-dim); }
+.badge--blue  { color: var(--blue);  border-color: rgba(58,123,213,0.3); background: var(--blue-dim); }
+.badge--dim   { color: var(--text-dim); border-color: var(--border); background: transparent; }

@@ -1,0 +1,130 @@
+.governance { animation: fadeUp 0.35s ease; }
+
+.proposals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.proposals-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px;
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.proposal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.15s;
+  animation: fadeUp 0.3s ease;
+}
+
+.proposal-card:hover { border-color: var(--border-bright); }
+
+.proposal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.proposal-ends { font-size: 0.6rem; color: var(--text-dim); }
+
+.proposal-title {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.proposal-desc {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.proposal-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.gov-form { display: flex; flex-direction: column; gap: 14px; }
+.gov-submit { width: 100%; margin-top: 4px; }
+
+.tally-loading, .tally-error {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+.tally-error { color: var(--red); }
+
+.tally-panel { display: flex; flex-direction: column; gap: 20px; }
+
+.tally-bars { display: flex; flex-direction: column; gap: 14px; }
+
+.tally-bar { display: flex; flex-direction: column; gap: 7px; }
+
+.tally-bar-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+}
+
+.tally-bar-label { color: var(--text-secondary); letter-spacing: 0.1em; }
+.tally-bar-count { color: var(--text-dim); }
+
+.tally-bar-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tally-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tally-bar-fill--green { background: var(--green); }
+.tally-bar-fill--red   { background: var(--red); }
+.tally-bar-fill--amber { background: var(--amber); }
+
+.tally-outcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--void);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.tally-outcome-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+.tally-total {
+  text-align: center;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}

@@ -1,0 +1,102 @@
+:root {
+  --obsidian: #080a0e;
+  --void: #0d1117;
+  --surface: #111820;
+  --surface-2: #161e28;
+  --surface-3: #1c2530;
+  --border: #1f2d3d;
+  --border-bright: #2a3f57;
+  --amber: #e8a020;
+  --amber-dim: #b07818;
+  --amber-glow: rgba(232, 160, 32, 0.12);
+  --amber-glow-strong: rgba(232, 160, 32, 0.22);
+  --red: #c84b3c;
+  --red-dim: rgba(200, 75, 60, 0.15);
+  --green: #2ea87e;
+  --green-dim: rgba(46, 168, 126, 0.15);
+  --blue: #3a7bd5;
+  --blue-dim: rgba(58, 123, 213, 0.12);
+  --text-primary: #e8edf2;
+  --text-secondary: #6b7f94;
+  --text-dim: #3d5268;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Fraunces', serif;
+  --radius: 2px;
+  --radius-lg: 4px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  background: var(--obsidian);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+/* Utility classes */
+.mono { font-family: var(--font-mono); }
+.display { font-family: var(--font-display); }
+
+/* Redact animation */
+@keyframes unredact {
+  0% { letter-spacing: -0.5px; color: transparent; background: var(--amber-dim); border-radius: 2px; }
+  60% { color: transparent; background: var(--amber-glow); }
+  100% { color: var(--amber); background: transparent; letter-spacing: normal; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-amber {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.redacted {
+  background: var(--text-dim);
+  color: transparent;
+  border-radius: 2px;
+  user-select: none;
+}
+
+.unredacting {
+  animation: unredact 0.8s ease forwards;
+}

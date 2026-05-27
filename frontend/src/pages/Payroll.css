@@ -1,0 +1,71 @@
+.payroll { animation: fadeUp 0.35s ease; }
+
+.table-actions { display: flex; gap: 6px; align-items: center; }
+
+.records-panel {
+  margin-top: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: fadeUp 0.3s ease;
+}
+
+.records-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+}
+
+.records-panel-title {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.records-panel-meta { font-size: 0.62rem; color: var(--text-dim); }
+
+.records-panel-actions { display: flex; gap: 8px; }
+
+.salary-accent {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.salary-plain { color: var(--text-primary); }
+
+.upload-form { display: flex; flex-direction: column; gap: 14px; }
+
+.csv-upload-area {
+  border: 1px dashed var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.csv-upload-area:hover {
+  border-color: var(--amber-dim);
+  background: var(--amber-glow);
+  color: var(--text-primary);
+}
+
+.csv-icon { color: var(--amber); margin-bottom: 4px; }
+
+.csv-hint {
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.upload-submit { width: 100%; }

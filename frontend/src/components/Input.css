@@ -1,0 +1,36 @@
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.field-input {
+  background: var(--void);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.field-input:focus {
+  border-color: var(--amber-dim);
+  box-shadow: 0 0 0 2px var(--amber-glow);
+}
+
+.field-input--error { border-color: var(--red); }
+.field-input--error:focus { box-shadow: 0 0 0 2px var(--red-dim); }
+
+.field-textarea { resize: vertical; min-height: 80px; }
+
+.field-select { cursor: pointer; appearance: none; }
+.field-select option { background: var(--surface); }
+
+.field-error { font-size: 0.62rem; color: var(--red); }

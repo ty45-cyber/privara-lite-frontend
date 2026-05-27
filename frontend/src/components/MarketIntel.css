@@ -1,0 +1,206 @@
+.market-intel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+/* Amber top accent line */
+.market-intel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--amber), transparent 70%);
+}
+
+.mi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+}
+
+.mi-header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mi-zap { color: var(--amber); }
+
+.mi-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+}
+
+.mi-powered {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.mi-powered:hover { color: var(--amber); }
+.mi-powered--loading { animation: pulse-amber 1.4s ease infinite; }
+
+/* Flow strip */
+.mi-flow-strip {
+  display: flex;
+  align-items: stretch;
+  padding: 16px 20px;
+  gap: 0;
+}
+
+.mi-flow-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mi-divider {
+  width: 1px;
+  background: var(--border);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.mi-flow-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.mi-flow-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.mi-flow--pos     { color: var(--green); }
+.mi-flow--neg     { color: var(--red); }
+.mi-flow--neutral { color: var(--text-primary); }
+
+.mi-signal {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid;
+  width: fit-content;
+}
+
+.mi-signal--inflow  { color: var(--green); border-color: rgba(46,168,126,0.3); background: var(--green-dim); }
+.mi-signal--outflow { color: var(--red);   border-color: rgba(200,75,60,0.3);  background: var(--red-dim); }
+.mi-signal--neutral { color: var(--text-dim); border-color: var(--border); background: transparent; }
+.mi-signal--aum     { color: var(--text-dim); border-color: var(--border); background: transparent; }
+
+/* Bottom row */
+.mi-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.mi-sentiment {
+  padding: 14px 20px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mi-sentiment-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.mi-sentiment-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--green) 100%);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mi-sentiment-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.56rem;
+  color: var(--text-dim);
+}
+
+.mi-sentiment-label {
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.mi-sent--bullish { color: var(--green); }
+.mi-sent--bearish { color: var(--red); }
+.mi-sent--neutral { color: var(--amber); }
+
+.mi-tags {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mi-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mi-tag {
+  font-size: 0.58rem;
+  padding: 2px 7px;
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+
+.mi-tag:hover {
+  border-color: var(--amber-dim);
+  color: var(--amber);
+  background: var(--amber-glow);
+}
+
+/* Loading / error states */
+.market-intel--loading,
+.market-intel--error { opacity: 0.7; }
+
+.mi-skeleton-rows { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.mi-skeleton-row {
+  height: 28px;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  animation: pulse-amber 1.4s ease infinite;
+}
+
+.mi-error-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mi-error-msg  { font-size: 0.7rem; color: var(--red); }
+.mi-error-hint { font-size: 0.62rem; color: var(--text-dim); }
