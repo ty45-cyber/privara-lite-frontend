@@ -1,3 +1,6 @@
+export const getToken = () =>
+  localStorage.getItem('privara_token')
+
 export const getUser = () => {
   try {
     return JSON.parse(localStorage.getItem('privara_user') || 'null')
@@ -16,6 +19,8 @@ export const clearSession = () => {
   localStorage.removeItem('privara_user')
 }
 
-export const isAuthenticated = () => !!localStorage.getItem('privara_token')
+export const isAuthenticated = () =>
+  !!localStorage.getItem('privara_token')
 
-export const hasRole = (user, ...roles) => user && roles.includes(user.role)
+export const hasRole = (user, ...roles) =>
+  user && roles.includes(user.role)
