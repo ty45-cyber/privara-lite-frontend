@@ -409,3 +409,40 @@ export const DECISION_HISTORY = [
     btc_price_30d_later:   98450,
   },
 ]
+
+export const COMPANY_STATS = {
+  name: "Meridian Capital Partners",
+  hq: "Nairobi, Kenya",
+  months_on_platform: 4,
+  employees: 26,
+  treasury_processed_usd: 1108500,
+  risk_accuracy_pct: 96,
+  capital_protected_usd: 578000,
+};
+
+export const COMPANY_MILESTONES = [
+  {
+    wave: 1,
+    date: "Feb 2026",
+    event: "Platform Onboarding",
+    detail: "Meridian Capital Partners adopted Privara Lite.",
+  },
+  {
+    wave: 2,
+    date: "Mar 2026",
+    event: "Payroll & Treasury Live",
+    detail: "Encrypted payroll and treasury approval workflows launched.",
+  },
+  {
+    wave: 3,
+    date: "May 2026",
+    event: "AI Risk Intelligence",
+    detail: "Integrated macro events, ETF flows, and treasury recommendations.",
+  },
+  {
+    wave: 4,
+    date: "Coming Soon",
+    event: "Autonomous Treasury",
+    detail: "AI-assisted treasury execution and predictive governance.",
+  },
+];
