@@ -115,7 +115,7 @@ const fmtDate = (d) => d
 
 const Skeleton = () => (
   <div className="skeleton-list">
-    {[1,2,3].map(i => <div key={i} key={i} className="skeleton-row" />)}
+    {[1,2,3].map(i => <div key={i} className="skeleton-row" />)}
   </div>
 )
 
