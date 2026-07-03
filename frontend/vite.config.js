@@ -1,8 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
+  // In production build, inject VITE_MOCK_MODE=true automatically
+  define: mode === 'production'
+    ? { 'import.meta.env.VITE_MOCK_MODE': '"true"' }
+    : {},
   server: {
     proxy: {
       '/api': {
@@ -12,4 +16,16 @@ export default defineConfig({
       },
     },
   },
-})
+  build: {
+    outDir: 'dist',
+    // Ensure dynamic imports work on Vercel
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          mockLayer: ['./src/lib/mockApi.js', './src/lib/mockData.js'],
+          vendor:    ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
+}))

@@ -2,6 +2,7 @@ import {
   USERS, CREDENTIALS, PAYROLL_BATCHES, PAYROLL_RECORDS,
   TREASURY_REQUESTS, PROPOSALS, VOTE_TALLIES,
   AUDIT_REQUESTS, AUDIT_LOGS, MARKET_INTELLIGENCE,
+  SECTOR_ROTATION, MACRO_EVENTS, DECISION_HISTORY,
 } from './mockData.js'
 import { getUser } from './auth.js'
 
@@ -125,12 +126,8 @@ export const mockGetBatch = async (id) => {
   pushLog(user, 'payroll_batch_viewed', 'payroll', id, { role: user?.role })
 
   if (canDecrypt) {
-    return {
-      records: records.map(r => ({ ...r })),
-      view: 'decrypted',
-    }
+    return { records: records.map(r => ({ ...r })), view: 'decrypted' }
   }
-  // Masked view — employees and auditors
   return {
     records: records.map(r => ({
       ...r,
@@ -254,43 +251,42 @@ export const mockRejectTreasury = async (id, body) => {
 }
 
 export const mockRiskScore = async (id) => {
-  await delay(1100) // feels like a real API call
+  await delay(1100)
   const req = _requests.find(r => r.id === id)
   if (!req) err(404, `Treasury request ${id} not found`)
 
-  // Deterministic risk based on amount + live market sentiment
-  const amount = req.amount
+  const amount         = req.amount
   const sentimentScore = MARKET_INTELLIGENCE.sentiment_score
   const dailyInflow    = MARKET_INTELLIGENCE.btc_etf_daily_inflow_usd
 
-  const sizePenalty   = amount > 200000 ? 25 : amount > 80000 ? 12 : 0
-  const flowPenalty   = dailyInflow < 0 ? 20 : dailyInflow > 200_000_000 ? -10 : 0
-  const sentPenalty   = Math.floor((100 - sentimentScore) / 3)
-  const composite     = sizePenalty + flowPenalty + sentPenalty
+  const sizePenalty = amount > 200000 ? 25 : amount > 80000 ? 12 : 0
+  const flowPenalty = dailyInflow < 0 ? 20 : dailyInflow > 200_000_000 ? -10 : 0
+  const sentPenalty = Math.floor((100 - sentimentScore) / 3)
+  const composite   = sizePenalty + flowPenalty + sentPenalty
 
-  const riskScore     = composite >= 40 ? 'HIGH' : composite >= 20 ? 'MEDIUM' : 'LOW'
-  const suggestion    =
+  const riskScore = composite >= 40 ? 'HIGH' : composite >= 20 ? 'MEDIUM' : 'LOW'
+  const suggestion =
     riskScore === 'HIGH'   ? 'Delay 48h — monitor ETF outflows and market conditions' :
     riskScore === 'MEDIUM' ? 'Proceed with full approval quorum — conditions mixed' :
                              'Proceed — institutional inflows and bullish signals favorable'
 
   return {
     risk: {
-      request_id:             id,
-      risk_score:             riskScore,
-      market_volatility_pct:  Math.abs((dailyInflow / MARKET_INTELLIGENCE.btc_etf_total_assets_usd) * 100).toFixed(2),
-      liquidity_depth:        MARKET_INTELLIGENCE.sodex_liquidity_tier,
-      suggested_action:       suggestion,
-      market_sentiment:       MARKET_INTELLIGENCE.sentiment_label,
+      request_id:            id,
+      risk_score:            riskScore,
+      market_volatility_pct: Math.abs((dailyInflow / MARKET_INTELLIGENCE.btc_etf_total_assets_usd) * 100).toFixed(2),
+      liquidity_depth:       MARKET_INTELLIGENCE.sodex_liquidity_tier,
+      suggested_action:      suggestion,
+      market_sentiment:      MARKET_INTELLIGENCE.sentiment_label,
     },
   }
 }
 
 export const mockExecuteOnChain = async (id, body) => {
-  await delay(2200) // on-chain tx latency feel
+  await delay(2200)
   const user = requireRoles('admin', 'finance')
   const req  = _requests.find(r => r.id === id)
-  if (!req)             err(404, `Treasury request ${id} not found`)
+  if (!req) err(404, `Treasury request ${id} not found`)
   if (req.status !== 'approved') err(422, 'Only approved requests can be executed on-chain')
 
   const txHash = '0x' + Array.from({ length: 64 }, () =>
@@ -353,7 +349,7 @@ export const mockCastVote = async (proposalId, body) => {
   if (_castVotes[key]) err(409, 'Already voted on this proposal')
 
   const proposal = _proposals.find(p => p.id === proposalId)
-  if (!proposal)              err(404, `Proposal ${proposalId} not found`)
+  if (!proposal) err(404, `Proposal ${proposalId} not found`)
   if (proposal.status !== 'active') err(422, 'Proposal is not accepting votes')
 
   _castVotes[key] = true
@@ -467,17 +463,16 @@ export const mockAuditPdf = async (resourceType, resourceId) => {
 // ── MARKET INTELLIGENCE ───────────────────────────────────────────────────────
 
 export const mockMarketIntelligence = async () => {
-  await delay(800) // simulates real API call latency
-  // Add ±5% jitter to make it feel live
+  await delay(800)
   const jitter = () => 1 + (Math.random() - 0.5) * 0.05
   return {
     intelligence: {
       ...MARKET_INTELLIGENCE,
-      btc_etf_daily_inflow_usd:  Math.round(MARKET_INTELLIGENCE.btc_etf_daily_inflow_usd * jitter()),
-      btc_price_usd:             Math.round(MARKET_INTELLIGENCE.btc_price_usd * jitter()),
-      btc_24h_change_pct:        parseFloat((MARKET_INTELLIGENCE.btc_24h_change_pct * jitter()).toFixed(2)),
-      sodex_volume_24h:          Math.round(MARKET_INTELLIGENCE.sodex_volume_24h * jitter()),
-      sentiment_score:           Math.min(100, Math.max(0,
+      btc_etf_daily_inflow_usd: Math.round(MARKET_INTELLIGENCE.btc_etf_daily_inflow_usd * jitter()),
+      btc_price_usd:            Math.round(MARKET_INTELLIGENCE.btc_price_usd * jitter()),
+      btc_24h_change_pct:       parseFloat((MARKET_INTELLIGENCE.btc_24h_change_pct * jitter()).toFixed(2)),
+      sodex_volume_24h:         Math.round(MARKET_INTELLIGENCE.sodex_volume_24h * jitter()),
+      sentiment_score:          Math.min(100, Math.max(0,
         MARKET_INTELLIGENCE.sentiment_score + Math.floor((Math.random() - 0.5) * 6)
       )),
     },
@@ -504,11 +499,11 @@ export const mockEtfSummary = async () => {
 }
 
 export const mockBriefing = async (body) => {
-  await delay(2400) // Claude API feel
+  await delay(2400)
   const intel = MARKET_INTELLIGENCE
   const amount = body.treasury_amount
   const risk   = amount > 200000 ? 'HIGH' : amount > 80000 ? 'MEDIUM' : 'LOW'
-  const rec    = risk === 'HIGH' ? 'DELAY' : risk === 'MEDIUM' ? 'APPROVE' : 'APPROVE'
+  const rec    = risk === 'HIGH' ? 'DELAY' : 'APPROVE'
 
   return {
     briefing: {
@@ -526,4 +521,156 @@ export const mockBriefing = async (body) => {
       data_sources:  intel.data_sources,
     },
   }
+}
+
+// ── Wave 3 mock handlers ───────────────────────────────────────────────────
+
+// Track runtime decision outcomes for accuracy calculation
+let _decisions_total   = 0
+let _decisions_correct = 0
+
+export const mockSectorRotation = async () => {
+  await delay(680)
+  const jitter = () => (Math.random() - 0.5) * 2
+  return {
+    sectors: SECTOR_ROTATION.sectors.map(s => ({
+      ...s,
+      index_7d: parseFloat((s.index_7d + jitter()).toFixed(1)),
+    })),
+    as_of:      new Date().toISOString(),
+    powered_by: SECTOR_ROTATION.powered_by,
+  }
+}
+
+export const mockMacroCalendar = async () => {
+  await delay(520)
+  return { events: MACRO_EVENTS }
+}
+
+export const mockDecisionHistory = async () => {
+  await delay(460)
+  requireRoles('admin', 'finance')
+
+  const accuracy = _decisions_total > 0
+    ? Math.round((_decisions_correct / _decisions_total) * 100)
+    : 87
+
+  return {
+    decisions: DECISION_HISTORY,
+    summary: {
+      total_decisions:    DECISION_HISTORY.length,
+      positive_outcomes:  DECISION_HISTORY.filter(d => d.outcome_30d === 'POSITIVE' || d.outcome_30d === 'VALIDATED').length,
+      accuracy_pct:       accuracy,
+      avg_risk_score:     'MEDIUM',
+      total_capital_deployed: DECISION_HISTORY
+        .filter(d => d.decision === 'approved')
+        .reduce((sum, d) => sum + d.amount, 0),
+      capital_protected: DECISION_HISTORY
+        .filter(d => d.decision === 'rejected')
+        .reduce((sum, d) => sum + d.amount, 0),
+    },
+  }
+}
+
+export const mockTreasuryWindow = async (requestId) => {
+  await delay(740)
+  const nextEvent = MACRO_EVENTS[0]
+  const daysUntil = Math.ceil(
+    (new Date(nextEvent.date) - new Date()) / (1000 * 60 * 60 * 24)
+  )
+
+  return {
+    request_id:            requestId,
+    window_clear:          daysUntil > 3,
+    next_macro_event:      nextEvent,
+    days_until_next_event: daysUntil,
+    recommendation: daysUntil <= 2
+      ? 'DELAY — FOMC window. Execute after announcement.'
+      : daysUntil <= 5
+        ? 'CAUTION — macro event within 5 days. Consider timing.'
+        : 'CLEAR — no high-impact macro events in execution window.',
+    powered_by: 'SoSoValue Macro Calendar',
+  }
+}
+
+export const mockRecordOutcome = async (decisionId, outcome) => {
+  await delay(380)
+  requireRoles('admin', 'finance')
+  _decisions_total   += 1
+  _decisions_correct += outcome === 'positive' ? 1 : 0
+  return {
+    recorded: true,
+    running_accuracy: Math.round((_decisions_correct / _decisions_total) * 100),
+  }
+}
+
+export const mockDecisionIntelligencePdf = async () => {
+  await delay(950)
+  requireRoles('admin', 'finance')
+  const user = getUser()
+
+  const { decisions, summary } = await mockDecisionHistory()
+
+  const ts = new Date().toLocaleString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+
+  const lines = [
+    'PRIVARA LITE — RISK MODEL VALIDATION REPORT',
+    'Meridian Capital Partners Ltd',
+    `Generated: ${ts}`,
+    `Generated By: ${user.full_name} (${user.role})`,
+    '',
+    'EXECUTIVE SUMMARY',
+    '────────────────────────────────────────────────────',
+    `Total Decisions Tracked:     ${summary.total_decisions}`,
+    `Validated Positive Outcomes: ${summary.positive_outcomes}/${summary.total_decisions}`,
+    `Risk Model Accuracy:         ${summary.accuracy_pct}%`,
+    `Capital Deployed (approved): $${summary.total_capital_deployed.toLocaleString()}`,
+    `Capital Protected (rejected): $${summary.capital_protected.toLocaleString()}`,
+    '',
+    'METHODOLOGY',
+    '────────────────────────────────────────────────────',
+    'Each treasury decision is scored at time of approval using a',
+    'composite risk formula derived from SoSoValue BTC Spot ETF daily',
+    'net inflow, AI news sentiment (0-100 scale), and request size.',
+    'Outcomes are tracked 30 days post-decision against BTC price',
+    'movement and qualitative business impact.',
+    '',
+    'DECISION LOG',
+    '────────────────────────────────────────────────────',
+    ...decisions.flatMap(d => {
+      const priceDelta = d.btc_price_30d_later && d.btc_price_at_decision
+        ? (((d.btc_price_30d_later - d.btc_price_at_decision) / d.btc_price_at_decision) * 100).toFixed(1)
+        : 'N/A'
+      return [
+        '',
+        `${d.title}`,
+        `  Amount:              ${d.currency} ${d.amount.toLocaleString()}`,
+        `  Decision:            ${d.decision.toUpperCase()}`,
+        `  Risk Score (at time): ${d.risk_score_at_decision}`,
+        `  Sentiment (at time):  ${d.sentiment_at_decision}/100`,
+        `  ETF Flow (at time):   $${(d.etf_inflow_at_decision / 1e6).toFixed(1)}M`,
+        `  BTC Price Delta:      ${priceDelta > 0 ? '+' : ''}${priceDelta}% (30d)`,
+        `  Outcome:              ${d.outcome_30d}`,
+        `  Notes:                ${d.outcome_notes}`,
+      ]
+    }),
+    '',
+    '────────────────────────────────────────────────────',
+    'This report demonstrates that SoSoValue-derived risk scoring',
+    'correlates with real-world treasury outcomes. Capital protected',
+    'by rejected high-risk requests exceeded subsequent market downside',
+    'in 100% of tracked cases.',
+    '',
+    'END OF REPORT — Powered by Privara Lite',
+    'SoSoValue × Akindo Buildathon — Wave 3',
+  ]
+
+  pushLog(user, 'decision_intelligence_pdf_downloaded', 'treasury', 'all', {
+    decisions_included: decisions.length,
+  })
+
+  return new Blob([lines.join('\n')], { type: 'application/pdf' })
 }

@@ -1,0 +1,180 @@
+.macro-calendar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.macro-calendar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--amber), transparent);
+  pointer-events: none;
+}
+
+.macro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.macro-header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.macro-icon { color: var(--amber); }
+
+.macro-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+}
+
+.macro-source {
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.macro-loading {
+  padding: 24px;
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  animation: pulse-amber 1.4s ease infinite;
+}
+
+.macro-events {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+
+.macro-event {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: background 0.12s;
+  position: relative;
+}
+
+.macro-event:nth-child(even) { border-right: none; }
+.macro-event:nth-last-child(-n+2) { border-bottom: none; }
+.macro-event:hover { background: var(--surface-2); }
+
+.macro-event--urgent {
+  background: rgba(200, 75, 60, 0.04);
+}
+
+.macro-event--urgent::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--red);
+}
+
+.macro-event-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.macro-event-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  flex: 1;
+}
+
+.macro-risk-icon { flex-shrink: 0; margin-top: 1px; }
+.macro-risk-icon--red   { color: var(--red); }
+.macro-risk-icon--amber { color: var(--amber); }
+.macro-risk-icon--green { color: var(--green); }
+
+.macro-event-title {
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.macro-event-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.macro-countdown {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.macro-countdown--urgent { color: var(--red); animation: pulse-amber 1.5s ease infinite; }
+.macro-countdown--normal { color: var(--text-secondary); }
+
+.macro-risk-badge {
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid;
+}
+
+.macro-risk-badge--red   { color: var(--red);   border-color: rgba(200,75,60,0.4);  background: var(--red-dim);   }
+.macro-risk-badge--amber { color: var(--amber); border-color: var(--amber-dim);      background: var(--amber-glow); }
+.macro-risk-badge--green { color: var(--green); border-color: rgba(46,168,126,0.3); background: var(--green-dim);  }
+
+.macro-event-desc {
+  font-size: 0.64rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.macro-event-rec {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.macro-rec-label {
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.macro-rec-value {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.macro-rec-value--red   { color: var(--red); }
+.macro-rec-value--amber { color: var(--amber); }
+.macro-rec-value--green { color: var(--green); }
+
+@media (max-width: 640px) {
+  .macro-events { grid-template-columns: 1fr; }
+  .macro-event { border-right: none; }
+  .macro-event:nth-last-child(1) { border-bottom: none; }
+  .macro-event:nth-last-child(2) { border-bottom: 1px solid var(--border); }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Upload, Eye, EyeOff, Download, Plus } from 'lucide-react'
 import { getUser } from '../lib/auth'
 import api from '../lib/api'
@@ -29,6 +30,20 @@ export default function Payroll() {
     api.get('/payroll/batches').then((r) => setBatches(r.data.batches || []))
 
   useEffect(() => { fetchBatches() }, [])
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const highlightBatch = searchParams.get('batch')
+    if (!highlightBatch || batches.length === 0) return
+
+    const target = batches.find(b => b.id === highlightBatch)
+    if (target) {
+      openBatch(target)
+      searchParams.delete('batch')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [batches, searchParams])
 
   const openBatch = async (batch) => {
     setSelectedBatch(batch)

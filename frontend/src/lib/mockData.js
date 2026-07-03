@@ -1,3 +1,4 @@
+// ── Wave 3 additions ──────────────────────────────────────────────────────
 // =============================================================================
 // MERIDIAN CAPITAL PARTNERS — MOCK DATA STORE
 // All data matches realistic_seed.sql exactly
@@ -273,3 +274,138 @@ export const MARKET_INTELLIGENCE = {
   data_sources:              ['SoSoValue ETF API', 'SoSoValue News API', 'SoDEX Liquidity API'],
   powered_by:                'SoSoValue API + SoDEX',
 }
+
+export const SECTOR_ROTATION = {
+  sectors: [
+    { name: 'AI & Compute',        symbol: 'AI',   index_7d: +14.2, index_30d: +38.7, flow_signal: 'STRONG_INFLOW', ssv_index: 'SSI-AI'   },
+    { name: 'Layer 1 Protocols',   symbol: 'L1',   index_7d:  +6.8, index_30d: +22.1, flow_signal: 'INFLOW',        ssv_index: 'SSI-L1'   },
+    { name: 'DeFi Infrastructure', symbol: 'DEFI', index_7d:  -3.2, index_30d:  +8.4, flow_signal: 'NEUTRAL',       ssv_index: 'SSI-DEFI' },
+    { name: 'RWA & Tokenization',  symbol: 'RWA',  index_7d: +11.6, index_30d: +31.2, flow_signal: 'STRONG_INFLOW', ssv_index: 'SSI-RWA'  },
+    { name: 'Gaming & NFT',        symbol: 'GAME', index_7d:  -8.1, index_30d: -14.3, flow_signal: 'OUTFLOW',       ssv_index: 'SSI-GAME' },
+    { name: 'Exchange Tokens',     symbol: 'CEX',  index_7d:  +2.3, index_30d: +12.8, flow_signal: 'NEUTRAL',       ssv_index: 'SSI-CEX'  },
+  ],
+  as_of: new Date().toISOString(),
+  powered_by: 'SoSoValue SSI Sector Indexes',
+}
+
+// Maps treasury spend categories to SSV sector indexes
+export const CATEGORY_SECTOR_MAP = {
+  'marketing':      'AI & Compute',
+  'technology':     'AI & Compute',
+  'infrastructure': 'Layer 1 Protocols',
+  'defi':           'DeFi Infrastructure',
+  'investment':     'RWA & Tokenization',
+  'operations':     'DeFi Infrastructure',
+  'legal':          'RWA & Tokenization',
+  'default':        'Layer 1 Protocols',
+}
+
+export const MACRO_EVENTS = [
+  {
+    id: 'macro_001',
+    date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    event: 'US Federal Reserve FOMC Meeting',
+    category: 'monetary_policy',
+    risk_impact: 'HIGH',
+    description: 'Rate decision expected. Markets pricing 85% probability of hold. High volatility window: 24h pre and 48h post announcement.',
+    treasury_recommendation: 'AVOID_LARGE_DEPLOYMENTS',
+    source: 'SoSoValue Macro Calendar',
+  },
+  {
+    id: 'macro_002',
+    date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    event: 'US CPI Inflation Data Release',
+    category: 'economic_data',
+    risk_impact: 'MEDIUM',
+    description: 'Core CPI expected at 3.1% YoY. Above-consensus print would trigger risk-off across crypto. BTC ETF flows historically drop 18% in 48h post-surprise CPI.',
+    treasury_recommendation: 'MONITOR',
+    source: 'SoSoValue Macro Calendar',
+  },
+  {
+    id: 'macro_003',
+    date: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    event: 'SEC Crypto Regulatory Hearing',
+    category: 'regulation',
+    risk_impact: 'MEDIUM',
+    description: 'Senate Banking Committee crypto oversight hearing. Historical pattern: 12% average BTC ETF outflow in the 3 days following adverse regulatory commentary.',
+    treasury_recommendation: 'MONITOR',
+    source: 'SoSoValue Macro Calendar',
+  },
+  {
+    id: 'macro_004',
+    date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    event: 'BTC ETF Options Expiry',
+    category: 'market_structure',
+    risk_impact: 'LOW',
+    description: '$2.3B in BTC ETF options expire. Max pain at $94K. Typically low directional impact but elevated intraday volatility.',
+    treasury_recommendation: 'PROCEED_NORMALLY',
+    source: 'SoSoValue Macro Calendar',
+  },
+]
+
+export const DECISION_HISTORY = [
+  {
+    id: 'dec_001',
+    treasury_request_id: 'treq_001',
+    title: 'Q1 2026 Office Infrastructure Upgrade',
+    amount: 145000,
+    currency: 'USD',
+    risk_score_at_decision: 'LOW',
+    sentiment_at_decision: 72,
+    etf_inflow_at_decision: 412_000_000,
+    decision: 'approved',
+    decided_at: '2026-03-08T14:30:00Z',
+    outcome_30d: 'POSITIVE',
+    outcome_notes: 'ISO 27001 certification achieved. Infrastructure stable. Decision validated.',
+    btc_price_at_decision: 87200,
+    btc_price_30d_later:   94100,
+  },
+  {
+    id: 'dec_002',
+    treasury_request_id: 'treq_002',
+    title: 'Lagos Office Lease — Q2 2026',
+    amount: 87500,
+    currency: 'USD',
+    risk_score_at_decision: 'LOW',
+    sentiment_at_decision: 68,
+    etf_inflow_at_decision: 287_000_000,
+    decision: 'approved',
+    decided_at: '2026-03-14T11:00:00Z',
+    outcome_30d: 'POSITIVE',
+    outcome_notes: 'LP meeting cadence doubled. 3 new LP relationships initiated from Lagos office.',
+    btc_price_at_decision: 89400,
+    btc_price_30d_later:   96200,
+  },
+  {
+    id: 'dec_003',
+    treasury_request_id: 'treq_010',
+    title: 'Luxury Corporate Retreat — Seychelles',
+    amount: 78000,
+    currency: 'USD',
+    risk_score_at_decision: 'MEDIUM',
+    sentiment_at_decision: 51,
+    etf_inflow_at_decision: -48_000_000,
+    decision: 'rejected',
+    decided_at: '2026-04-09T09:00:00Z',
+    outcome_30d: 'VALIDATED',
+    outcome_notes: 'BTC dropped 11% in the week following. ETF saw $380M outflow. Rejection saved capital during risk-off period.',
+    btc_price_at_decision: 91800,
+    btc_price_30d_later:   83200,
+  },
+  {
+    id: 'dec_004',
+    treasury_request_id: 'treq_004',
+    title: 'Pan-Africa LP Summit Sponsorship',
+    amount: 95000,
+    currency: 'USD',
+    risk_score_at_decision: 'MEDIUM',
+    sentiment_at_decision: 61,
+    etf_inflow_at_decision: 156_000_000,
+    decision: 'approved',
+    decided_at: '2026-04-15T16:00:00Z',
+    outcome_30d: 'POSITIVE',
+    outcome_notes: 'Summit generated 6 warm LP introductions. 2 converted to Fund III commitments ($18M combined).',
+    btc_price_at_decision: 93100,
+    btc_price_30d_later:   98450,
+  },
+]

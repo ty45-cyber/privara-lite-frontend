@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader'
 import { StatCard } from '../components/Card'
 import Badge from '../components/Badge'
 import MarketIntel from '../components/MarketIntel'
+import CompanyStory from '../components/CompanyStory'
 import './Dashboard.css'
 
 export default function Dashboard() {
@@ -42,6 +43,7 @@ export default function Dashboard() {
       />
 
       {/* SoSoValue market intelligence — visible to judges immediately */}
+      <CompanyStory variant="dashboard" />
       <MarketIntel />
 
       <div className="stats-grid">

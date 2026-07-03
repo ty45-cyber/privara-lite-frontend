@@ -1,0 +1,121 @@
+.manifesto {
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 48px;
+}
+
+.manifesto-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.manifesto-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  margin-bottom: 20px;
+}
+
+.manifesto-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
+}
+
+.manifesto-accent {
+  color: var(--amber);
+  position: relative;
+}
+
+.manifesto-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.manifesto-body p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.manifesto-body p strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.manifesto-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.manifesto-pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+
+.manifesto-pillar:last-child { border-bottom: none; }
+.manifesto-pillar:hover { background: var(--surface); }
+
+.manifesto-pillar-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.manifesto-pillar-icon--amber { color: var(--amber); }
+.manifesto-pillar-icon--green { color: var(--green); }
+.manifesto-pillar-icon--blue  { color: var(--blue);  }
+
+.manifesto-pillar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.manifesto-pillar-title {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.manifesto-pillar-desc {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.manifesto-attribution {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.manifesto-attribution a {
+  color: var(--amber);
+  text-decoration: none;
+}
+
+.manifesto-attribution a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .manifesto { padding: 60px 20px; }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Plus, BarChart2 } from 'lucide-react'
 import { getUser } from '../lib/auth'
 import api from '../lib/api'
@@ -26,6 +27,21 @@ export default function Governance() {
     api.get('/governance/proposals').then(r => setProposals(r.data.proposals || []))
 
   useEffect(() => { fetchProposals() }, [])
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const highlightProposal = searchParams.get('proposal')
+    const action = searchParams.get('action')
+    if (!highlightProposal || proposals.length === 0) return
+
+    if (action === 'tally') {
+      viewResults(highlightProposal)
+    }
+    searchParams.delete('proposal')
+    searchParams.delete('action')
+    setSearchParams(searchParams, { replace: true })
+  }, [proposals, searchParams])
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
 

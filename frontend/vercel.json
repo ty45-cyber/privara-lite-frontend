@@ -1,0 +1,23 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!assets|favicon|robots).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Powered-By", "value": "Privara Lite — SoSoValue × Akindo Wave 3" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
+  ]
+}

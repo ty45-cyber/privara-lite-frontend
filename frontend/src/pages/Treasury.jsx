@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Plus, TrendingUp, CheckCircle, XCircle } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
+import { Plus, TrendingUp, CheckCircle, XCircle, Calendar } from 'lucide-react'
 import { getUser } from '../lib/auth'
 import api from '../lib/api'
 import PageHeader from '../components/PageHeader'
@@ -8,6 +9,8 @@ import Badge from '../components/Badge'
 import Table from '../components/Table'
 import Modal from '../components/Modal'
 import Input from '../components/Input'
+import MacroCalendar from '../components/MacroCalendar'
+import DecisionIntelligence from '../components/DecisionIntelligence'
 import './Treasury.css'
 
 export default function Treasury() {
@@ -19,6 +22,7 @@ export default function Treasury() {
   const [createModal, setCreateModal] = useState(false)
   const [riskModal, setRiskModal]   = useState(false)
   const [risk, setRisk]             = useState(null)
+  const [currentRiskId, setCurrentRiskId] = useState(null)
   const [loading, setLoading]       = useState(false)
   const [form, setForm]             = useState({
     title: '',
@@ -28,10 +32,25 @@ export default function Treasury() {
     required_approvals: 2,
   })
 
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const fetchRequests = () =>
     api.get('/treasury/requests').then((r) => setRequests(r.data.requests || []))
 
   useEffect(() => { fetchRequests() }, [])
+
+  // Deep-link support: ?highlight=treq_009 auto-opens that request's risk modal
+  useEffect(() => {
+    const highlightId = searchParams.get('highlight')
+    if (!highlightId || requests.length === 0) return
+
+    const target = requests.find(r => r.id === highlightId)
+    if (target) {
+      openRisk(highlightId, target)
+      searchParams.delete('highlight')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [requests, searchParams])
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -74,6 +93,7 @@ export default function Treasury() {
 
   const openRisk = async (id) => {
     setRisk(null)
+    setCurrentRiskId(id)
     setRiskModal(true)
     try {
       const { data } = await api.get(`/treasury/requests/${id}/risk-score`)
@@ -83,10 +103,17 @@ export default function Treasury() {
     }
   }
 
+  const highlightedId = searchParams.get('highlight')
+
   const cols = [
     {
-      key: 'title',
-      label: 'TITLE',
+      key:    'title',
+      label:  'TITLE',
+      render: (v, r) => (
+        <span className={r.id === highlightedId ? 'row-highlighted' : ''}>
+          {v}
+        </span>
+      ),
     },
     {
       key: 'amount',
@@ -158,6 +185,9 @@ export default function Treasury() {
         emptyMessage="No treasury requests submitted"
       />
 
+      <MacroCalendar />
+      <DecisionIntelligence />
+
       {/* ── Create Modal ─────────────────────────────────────────── */}
       <Modal
         open={createModal}
@@ -216,7 +246,7 @@ export default function Treasury() {
       {/* ── Risk Modal ───────────────────────────────────────────── */}
       <Modal
         open={riskModal}
-        onClose={() => { setRiskModal(false); setRisk(null) }}
+        onClose={() => { setRiskModal(false); setRisk(null); setCurrentRiskId(null) }}
         title="TREASURY RISK INTELLIGENCE"
         width={420}
       >
@@ -264,9 +294,47 @@ export default function Treasury() {
               </a>
               <span> — BTC Spot ETF flows + AI news sentiment</span>
             </div>
+
+            {/* Macro window check */}
+            {currentRiskId && <MacroWindow requestId={currentRiskId} />}
           </div>
         )}
       </Modal>
+    </div>
+  )
+}
+
+function MacroWindow({ requestId }) {
+  const [window, setWindow] = useState(null)
+
+  useEffect(() => {
+    api.get(`/treasury/requests/${requestId}/window`)
+      .then(r => setWindow(r.data))
+      .catch(() => {})
+  }, [requestId])
+
+  if (!window) return null
+
+  const color = window.window_clear ? 'green' : 'red'
+
+  return (
+    <div className={`macro-window macro-window--${color}`}>
+      <div className="macro-window-header">
+        <Calendar size={11} />
+        <span>MACRO EXECUTION WINDOW</span>
+        <span className="macro-window-source">SoSoValue Macro Calendar</span>
+      </div>
+      <div className="macro-window-body">
+        <span className={`macro-window-status macro-window-status--${color}`}>
+          {window.window_clear ? '✓ CLEAR' : '⚠ CAUTION'}
+        </span>
+        <span className="macro-window-rec">{window.recommendation}</span>
+      </div>
+      {window.next_macro_event && (
+        <div className="macro-window-next">
+          Next: {window.next_macro_event.event} in {window.days_until_next_event}d
+        </div>
+      )}
     </div>
   )
 }

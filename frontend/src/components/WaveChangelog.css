@@ -1,0 +1,206 @@
+.changelog {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.changelog-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 18px;
+  background: var(--void);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.changelog-toggle:hover { background: var(--surface); }
+
+.changelog-git-icon { color: var(--amber); flex-shrink: 0; }
+
+.changelog-toggle-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+}
+
+.changelog-toggle-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  flex: 1;
+}
+
+.changelog-chevron { color: var(--text-dim); flex-shrink: 0; }
+
+/* Body */
+.changelog-body {
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Wave block */
+.changelog-wave {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.changelog-wave:last-child { border-bottom: none; }
+
+.changelog-wave--current { background: rgba(232,160,32,0.03); }
+.changelog-wave--submitted { background: transparent; }
+
+.changelog-wave-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.changelog-wave-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.changelog-wave-badge {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+  border: 1px solid;
+}
+
+.changelog-wave-badge--current  { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
+.changelog-wave-badge--submitted { color: var(--text-dim); border-color: var(--border); background: transparent; }
+
+.changelog-wave-title {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: var(--font-display);
+}
+
+.changelog-live-badge {
+  font-size: 0.54rem;
+  letter-spacing: 0.14em;
+  color: var(--green);
+  border: 1px solid rgba(46,168,126,0.3);
+  background: var(--green-dim);
+  padding: 2px 7px;
+  border-radius: 2px;
+  animation: pulse-amber 2s ease infinite;
+}
+
+.changelog-wave-theme {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Judge responses */
+.changelog-responses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.changelog-responses-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  margin-bottom: 2px;
+}
+
+.changelog-response {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.changelog-response-judge {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 160px;
+  flex-shrink: 0;
+}
+
+.changelog-judge-name {
+  font-size: 0.62rem;
+  color: var(--amber);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.changelog-judge-quote {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.changelog-arrow { color: var(--text-dim); flex-shrink: 0; margin-top: 3px; }
+
+.changelog-response-fix {
+  font-size: 0.65rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* Highlights list */
+.changelog-highlights {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.changelog-highlights li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.changelog-check { color: var(--green); flex-shrink: 0; margin-top: 2px; }
+
+/* Additions */
+.changelog-additions { display: flex; flex-direction: column; gap: 8px; }
+
+.changelog-additions-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+/* Verdict */
+.changelog-verdict {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 8px 12px;
+  background: var(--void);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--amber-dim);
+}

@@ -189,3 +189,81 @@
   opacity: 0.8;
   text-decoration: underline;
 }
+
+/* ── Macro Window ─────────────────────────────────────────────────────────── */
+
+.macro-window {
+  border: 1px solid;
+  border-radius: var(--radius);
+  overflow: hidden;
+  animation: fadeUp 0.25s ease;
+}
+
+.macro-window--green { border-color: rgba(46,168,126,0.4); }
+.macro-window--red   { border-color: rgba(200,75,60,0.4);  }
+
+.macro-window-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+}
+
+.macro-window-source { margin-left: auto; color: var(--text-dim); font-size: 0.54rem; }
+
+.macro-window-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.macro-window-status {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.macro-window-status--green { color: var(--green); }
+.macro-window-status--red   { color: var(--red);   }
+
+.macro-window-rec {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.macro-window-next {
+  padding: 6px 12px;
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+}
+
+/* ── Row Highlight ────────────────────────────────────────────────────────── */
+
+.row-highlighted {
+  position: relative;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.row-highlighted::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--amber);
+  animation: pulse-amber 1s ease infinite;
+}
