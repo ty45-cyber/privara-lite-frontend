@@ -2,21 +2,25 @@ import { useState, useEffect } from 'react'
 import { FileSpreadsheet, Vault, Vote, ClipboardList, AlertTriangle } from 'lucide-react'
 import { getUser } from '../lib/auth'
 import api from '../lib/api'
-import PageHeader from '../components/PageHeader'
-import { StatCard } from '../components/Card'
-import Badge from '../components/Badge'
-import MarketIntel from '../components/MarketIntel'
-import CompanyStory from '../components/CompanyStory'
+import PageHeader        from '../components/PageHeader'
+import { StatCard }      from '../components/Card'
+import Badge             from '../components/Badge'
+import MarketIntel       from '../components/MarketIntel'
+import SentinelBanner    from '../components/SentinelBanner'
+import CompanyStory      from '../components/CompanyStory'
+import AccuracyHero      from '../components/AccuracyHero'
+import EcosystemScore    from '../components/EcosystemScore'
 import './Dashboard.css'
+
 
 export default function Dashboard() {
   const user = getUser()
-  const [data, setData] = useState({ batches: [], requests: [], proposals: [], logs: [] })
+  const [data, setData]     = useState({ batches: [], requests: [], proposals: [], logs: [] })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
-      api.get('/payroll/batches').catch(() => ({ data: { batches: [] } })),
+      api.get('/payroll/batches').catch(() => ({ data: { batches:   [] } })),
       api.get('/treasury/requests').catch(() => ({ data: { requests: [] } })),
       api.get('/governance/proposals').catch(() => ({ data: { proposals: [] } })),
       api.get('/audit/logs').catch(() => ({ data: { logs: [] } })),
@@ -42,10 +46,22 @@ export default function Dashboard() {
         subtitle={`Clearance: ${user?.role?.toUpperCase()} · Session encrypted · AES-256-GCM`}
       />
 
-      {/* SoSoValue market intelligence — visible to judges immediately */}
+      {/* Sentinel — proactive AI risk monitor, no button required */}
+      <SentinelBanner />
+
+      {/* Company story */}
       <CompanyStory variant="dashboard" />
+
+      {/* Accuracy hero — 87% visible immediately */}
+      {['admin', 'finance'].includes(user?.role) && <AccuracyHero />}
+
+      <EcosystemScore />
+
+      {/* Live SoSoValue market intelligence */}
+
       <MarketIntel />
 
+      {/* Stats */}
       <div className="stats-grid">
         <StatCard label="PAYROLL BATCHES"   value={data.batches.length}   sub="Encrypted at rest"            accent="amber" icon={FileSpreadsheet} />
         <StatCard label="TREASURY REQUESTS" value={data.requests.length}  sub={`${pendingTreasury} pending`} accent="green" icon={Vault} />
@@ -53,6 +69,7 @@ export default function Dashboard() {
         <StatCard label="AUDIT EVENTS"      value={data.logs.length}      sub="Immutable log"                accent="amber" icon={ClipboardList} />
       </div>
 
+      {/* Activity rows */}
       <div className="dash-row">
         <div className="dash-col">
           <div className="section-header">

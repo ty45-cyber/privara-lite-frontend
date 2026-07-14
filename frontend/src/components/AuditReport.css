@@ -1,0 +1,30 @@
+.audit-report-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.audit-report-btn:hover:not(:disabled) {
+  border-color: var(--amber-dim);
+  color: var(--amber);
+  background: var(--amber-glow);
+}
+
+.audit-report-btn--done {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+
+.audit-report-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.audit-report-spin { animation: spin 0.6s linear infinite; }

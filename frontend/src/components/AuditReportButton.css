@@ -1,0 +1,39 @@
+.audit-report-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf0ff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+.audit-report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.audit-report-btn:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-1px);
+}
+
+.audit-report-spin {
+  animation: audit-spin 0.9s linear infinite;
+}
+
+@keyframes audit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.audit-report-btn--done {
+  border-color: rgba(52, 211, 153, 0.45);
+  background: rgba(52, 211, 153, 0.10);
+}
+

@@ -12,7 +12,7 @@ const WAVES = [
       {
         judge: 'Goodynation',
         feedback: '"Live deployment is required."',
-        fix: 'vercel.json SPA rewrite + VITE_MOCK_MODE auto-inject. Zero backend dependency.',
+        fix: 'vercel.json SPA rewrite + VITE_MOCK_MODE auto-inject. Zero backend dependency on Vercel.',
       },
       {
         judge: 'MuhammadBa_2024',
@@ -22,16 +22,16 @@ const WAVES = [
       {
         judge: 'BlessinSum',
         feedback: '"Extend gating to macro events, sector rotation."',
-        fix: 'Macro Calendar + Sector Rotation panels. SoSoValue SSI index integration.',
+        fix: 'Macro Calendar + Sector Rotation panels powered by SoSoValue SSI index.',
       },
     ],
     additions: [
+      'Five named AI agents — Priya, Felix, Sage, Atlas, Sentinel',
       'Deep-link routing → judges land in Project Baobab in one click',
-      'Macro execution window check inside every risk modal',
-      'Decision Intelligence PDF export',
-      'WebSocket live feed — 30s push, no polling',
-      'Demo mode — one-click role access, no login',
-      'Full mobile responsive',
+      'Macro execution window check inside every treasury risk modal',
+      'Decision Intelligence PDF export — downloadable validation report',
+      'Demo mode — one-click role access, no login required',
+      'Full mobile responsive across all modules',
     ],
   },
   {
@@ -42,11 +42,11 @@ const WAVES = [
     highlights: [
       'AES-256-GCM encrypted payroll — role-gated reveal',
       'Treasury approvals gated by live SoSoValue ETF flows',
-      'Claude Sonnet AI briefings grounded in market data',
+      'Claude Sonnet AI briefings grounded in live market data',
       'SoDEX testnet execution with real tx hash',
-      'Meridian Capital Partners: 47 employees, $1.2M treasury',
+      'Meridian Capital Partners: 47 employees, $1.2M treasury, KPMG audits',
     ],
-    verdict: 'Most original submission. Blank deployment blocked the grant.',
+    verdict: 'Most original submission this wave. Blank Vercel deployment blocked the grant.',
   },
   {
     wave: 1,
@@ -54,7 +54,7 @@ const WAVES = [
     theme: 'SoSoValue as primary institutional data source.',
     status: 'submitted',
     highlights: [
-      'Bloomberg terminal for Solana',
+      'Bloomberg terminal aesthetic for Solana',
       'LangGraph agent platform, 64 files',
       'SoSoValue primary data source for token analysis',
       'Institutional sentiment → actionable signals',
@@ -68,28 +68,17 @@ export default function WaveChangelog() {
 
   return (
     <div className="changelog">
-      <button
-        className="changelog-toggle"
-        onClick={() => setOpen(o => !o)}
-      >
+      <button className="changelog-toggle" onClick={() => setOpen(o => !o)}>
         <GitCommit size={13} className="changelog-git-icon" />
         <span className="changelog-toggle-label">WAVE HISTORY</span>
-        <span className="changelog-toggle-sub">
-          3 waves · Every judge comment answered
-        </span>
-        {open
-          ? <ChevronUp size={13} className="changelog-chevron" />
-          : <ChevronDown size={13} className="changelog-chevron" />
-        }
+        <span className="changelog-toggle-sub">3 waves · Every judge comment answered</span>
+        {open ? <ChevronUp size={13} className="changelog-chevron" /> : <ChevronDown size={13} className="changelog-chevron" />}
       </button>
 
       {open && (
         <div className="changelog-body">
-          {WAVES.map((w) => (
-            <div
-              key={w.wave}
-              className={`changelog-wave changelog-wave--${w.status}`}
-            >
+          {WAVES.map(w => (
+            <div key={w.wave} className={`changelog-wave changelog-wave--${w.status}`}>
               <div className="changelog-wave-header">
                 <div className="changelog-wave-left">
                   <span className={`changelog-wave-badge changelog-wave-badge--${w.status}`}>
@@ -104,12 +93,9 @@ export default function WaveChangelog() {
 
               <p className="changelog-wave-theme">{w.theme}</p>
 
-              {/* Judge responses — Wave 3 */}
               {w.responses && (
                 <div className="changelog-responses">
-                  <div className="changelog-responses-label">
-                    RESPONDING TO JUDGE FEEDBACK
-                  </div>
+                  <div className="changelog-responses-label">RESPONDING TO JUDGE FEEDBACK</div>
                   {w.responses.map((r, i) => (
                     <div key={i} className="changelog-response">
                       <div className="changelog-response-judge">
@@ -123,7 +109,6 @@ export default function WaveChangelog() {
                 </div>
               )}
 
-              {/* Highlights — all waves */}
               {w.highlights && (
                 <ul className="changelog-highlights">
                   {w.highlights.map((h, i) => (
@@ -135,7 +120,6 @@ export default function WaveChangelog() {
                 </ul>
               )}
 
-              {/* Wave 3 additions */}
               {w.additions && (
                 <div className="changelog-additions">
                   <div className="changelog-additions-label">WAVE 3 ADDITIONS</div>
@@ -150,7 +134,6 @@ export default function WaveChangelog() {
                 </div>
               )}
 
-              {/* Verdict */}
               {w.verdict && (
                 <div className="changelog-verdict">{w.verdict}</div>
               )}

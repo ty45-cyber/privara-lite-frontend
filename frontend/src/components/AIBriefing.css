@@ -1,6 +1,7 @@
 .briefing-trigger {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   padding: 8px 14px;
   background: var(--surface-2);
@@ -12,7 +13,6 @@
   letter-spacing: 0.1em;
   cursor: pointer;
   width: 100%;
-  justify-content: center;
   transition: all 0.15s;
   margin-top: 8px;
 }
@@ -36,10 +36,7 @@
   margin-top: 8px;
 }
 
-.briefing-loading-icon {
-  color: var(--amber);
-  animation: pulse-amber 1s ease infinite;
-}
+.briefing-loading-icon { color: var(--amber); animation: pulse-amber 1s ease infinite; }
 
 .briefing-error {
   display: flex;
@@ -69,7 +66,6 @@
 
 .briefing-retry:hover { background: var(--red-dim); }
 
-/* Panel */
 .briefing-panel {
   border: 1px solid;
   border-radius: var(--radius-lg);
@@ -80,7 +76,7 @@
 
 .briefing-panel--green { border-color: rgba(46,168,126,0.4); }
 .briefing-panel--amber { border-color: rgba(232,160,32,0.4); }
-.briefing-panel--red   { border-color: rgba(200,75,60,0.4); }
+.briefing-panel--red   { border-color: rgba(200,75,60,0.4);  }
 
 .briefing-header {
   display: flex;
@@ -97,19 +93,9 @@
   gap: 8px;
 }
 
-.briefing-spark { color: var(--amber); }
-
-.briefing-label {
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  color: var(--amber);
-}
-
-.briefing-confidence {
-  font-size: 0.55rem;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
+.briefing-spark    { color: var(--amber); }
+.briefing-label    { font-size: 0.58rem; letter-spacing: 0.12em; color: var(--amber); }
+.briefing-confidence { font-size: 0.55rem; color: var(--text-dim); letter-spacing: 0.1em; }
 
 .briefing-rec {
   display: inline-flex;
@@ -124,8 +110,8 @@
 }
 
 .briefing-rec--green { color: var(--green); border-color: rgba(46,168,126,0.4); background: var(--green-dim); }
-.briefing-rec--amber { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
-.briefing-rec--red   { color: var(--red);   border-color: rgba(200,75,60,0.4); background: var(--red-dim); }
+.briefing-rec--amber { color: var(--amber); border-color: var(--amber-dim);      background: var(--amber-glow); }
+.briefing-rec--red   { color: var(--red);   border-color: rgba(200,75,60,0.4);  background: var(--red-dim);   }
 
 .briefing-body {
   padding: 14px;
@@ -141,11 +127,7 @@
   font-style: italic;
 }
 
-.briefing-signals {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.briefing-signals { display: flex; flex-direction: column; gap: 8px; }
 
 .briefing-signal {
   display: flex;
@@ -182,11 +164,7 @@
 }
 
 .briefing-snap-sep { color: var(--border-bright); }
-
-.briefing-attr {
-  color: var(--amber);
-  opacity: 0.7;
-}
+.briefing-attr     { color: var(--amber); opacity: 0.7; }
 
 .briefing-regenerate {
   display: block;

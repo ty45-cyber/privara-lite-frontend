@@ -1,0 +1,253 @@
+.vc-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px dashed rgba(58,123,213,0.6);
+  border-radius: var(--radius);
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+
+.vc-trigger:hover { background: var(--blue-dim); }
+
+.vc-trigger-badge {
+  font-size: 0.54rem;
+  padding: 1px 6px;
+  border: 1px solid rgba(58,123,213,0.4);
+  border-radius: 2px;
+  background: var(--blue-dim);
+}
+
+.vc-form {
+  border: 1px solid rgba(58,123,213,0.4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 8px;
+  animation: fadeUp 0.25s ease;
+}
+
+.vc-form-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: var(--blue-dim);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+}
+
+.vc-zap { color: var(--blue); }
+
+.vc-ecosystem-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.54rem;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--amber-glow);
+}
+
+.vc-ecosystem-badge-sm {
+  margin-left: auto;
+  font-size: 0.52rem;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--amber-glow);
+}
+
+.vc-form-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--void);
+}
+
+.vc-field { display: flex; flex-direction: column; gap: 5px; }
+.vc-label { font-size: 0.56rem; letter-spacing: 0.12em; color: var(--text-dim); }
+
+.vc-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.vc-input:focus { border-color: rgba(58,123,213,0.4); }
+
+.vc-token-row { display: flex; gap: 6px; }
+
+.vc-token-btn {
+  padding: 5px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.vc-token-btn:hover { border-color: rgba(58,123,213,0.4); color: var(--blue); }
+.vc-token-btn--active { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+
+.vc-preview {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.vc-preview-net   { color: var(--blue); font-weight: 500; }
+.vc-preview-token { color: var(--text-dim); }
+
+.vc-error {
+  font-size: 0.65rem;
+  color: var(--red);
+  padding: 8px 10px;
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  border-radius: var(--radius);
+}
+
+.vc-form-actions { display: flex; gap: 8px; }
+
+.vc-cancel {
+  flex: 1;
+  padding: 8px;
+  background: none;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.vc-cancel:hover { color: var(--text-primary); }
+
+.vc-confirm {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: var(--blue);
+  border: none;
+  border-radius: var(--radius);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.vc-confirm:hover:not(:disabled) { filter: brightness(1.15); }
+.vc-confirm:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.vc-executing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(58,123,213,0.3);
+  border-radius: var(--radius-lg);
+  background: var(--blue-dim);
+  margin-top: 8px;
+}
+
+.vc-spin { color: var(--blue); animation: spin 0.8s linear infinite; }
+
+.vc-executing-text { display: flex; flex-direction: column; gap: 3px; }
+.vc-executing-title { font-size: 0.68rem; color: var(--blue); font-weight: 500; }
+.vc-executing-sub   { font-size: 0.6rem;  color: var(--text-dim); }
+
+/* Receipt */
+.vc-receipt {
+  border: 1px solid rgba(58,123,213,0.5);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 8px;
+  animation: fadeUp 0.3s ease;
+}
+
+.vc-receipt-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--blue-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.vc-check { color: var(--blue); }
+.vc-receipt-label { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--blue); flex: 1; }
+
+.vc-receipt-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--void);
+}
+
+.vc-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.68rem; }
+.vc-row-label { font-size: 0.56rem; letter-spacing: 0.1em; color: var(--text-dim); }
+.vc-row-value { color: var(--text-primary); font-family: var(--font-mono); }
+
+.vc-tx-hash {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.vc-tx-hash:hover { opacity: 0.8; }
+
+.vc-status { color: var(--green); font-weight: 700; font-size: 0.65rem; letter-spacing: 0.06em; }
+
+.vc-receipt-footer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  font-size: 0.54rem;
+  color: var(--text-dim);
+}
+
+.vc-receipt-footer svg { color: var(--amber); }
+.vc-receipt-footer a   { color: var(--amber); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }

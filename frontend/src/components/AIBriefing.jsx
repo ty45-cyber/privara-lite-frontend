@@ -4,24 +4,24 @@ import api from '../lib/api'
 import './AIBriefing.css'
 
 const REC_CONFIG = {
-  APPROVE: { icon: CheckCircle, color: 'green',  label: 'APPROVE'  },
-  DELAY:   { icon: Clock,       color: 'amber',  label: 'DELAY'    },
-  REJECT:  { icon: XCircle,     color: 'red',    label: 'REJECT'   },
+  APPROVE: { icon: CheckCircle, color: 'green', label: 'APPROVE' },
+  DELAY:   { icon: Clock,       color: 'amber', label: 'DELAY'   },
+  REJECT:  { icon: XCircle,     color: 'red',   label: 'REJECT'  },
 }
 
 export default function AIBriefing({ requestId, title, amount, currency }) {
-  const [briefing, setBriefing] = useState(null)
-  const [snapshot, setSnapshot] = useState(null)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
+  const [briefing, setBriefing]   = useState(null)
+  const [snapshot, setSnapshot]   = useState(null)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
 
   const generate = async () => {
     setLoading(true)
     setError(null)
     try {
       const { data } = await api.post('/market/briefing', {
-        treasury_title: title,
-        treasury_amount: amount,
+        treasury_title:    title,
+        treasury_amount:   amount,
         treasury_currency: currency,
       })
       setBriefing(data.briefing)
@@ -61,7 +61,7 @@ export default function AIBriefing({ requestId, title, amount, currency }) {
     )
   }
 
-  const rec = REC_CONFIG[briefing?.recommendation] || REC_CONFIG.DELAY
+  const rec     = REC_CONFIG[briefing?.recommendation] || REC_CONFIG.DELAY
   const RecIcon = rec.icon
 
   return (
@@ -72,9 +72,7 @@ export default function AIBriefing({ requestId, title, amount, currency }) {
           <span className="briefing-label">AI TREASURY BRIEFING</span>
         </div>
         <div className="briefing-header-right">
-          <span className="briefing-confidence">
-            {briefing.confidence} CONFIDENCE
-          </span>
+          <span className="briefing-confidence">{briefing.confidence} CONFIDENCE</span>
           <span className={`briefing-rec briefing-rec--${rec.color}`}>
             <RecIcon size={11} />
             {rec.label}
@@ -108,18 +106,12 @@ export default function AIBriefing({ requestId, title, amount, currency }) {
             <span className="briefing-snap-sep">·</span>
             <span>{snapshot.sentiment}</span>
             <span className="briefing-snap-sep">·</span>
-            <span className="briefing-attr">
-              Powered by SoSoValue + Claude Sonnet
-            </span>
+            <span className="briefing-attr">Powered by SoSoValue + Claude Sonnet</span>
           </div>
         )}
       </div>
 
-      <button
-        className="briefing-regenerate"
-        onClick={generate}
-        disabled={loading}
-      >
+      <button className="briefing-regenerate" onClick={generate} disabled={loading}>
         REFRESH BRIEFING
       </button>
     </div>

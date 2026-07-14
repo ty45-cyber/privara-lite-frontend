@@ -9,8 +9,13 @@ import Badge from '../components/Badge'
 import Table from '../components/Table'
 import Modal from '../components/Modal'
 import Input from '../components/Input'
+import AutonomousLoop from '../components/AutonomousLoop'
 import MacroCalendar from '../components/MacroCalendar'
 import DecisionIntelligence from '../components/DecisionIntelligence'
+import SSIIntelligence from '../components/SSIIntelligence'
+import SocatisReports from '../components/SocatisReports'
+import ValueChainSettle from '../components/ValueChainSettle'
+import ApprovalIntelligence from '../components/ApprovalIntelligence'
 import './Treasury.css'
 
 export default function Treasury() {
@@ -23,6 +28,12 @@ export default function Treasury() {
   const [riskModal, setRiskModal]   = useState(false)
   const [risk, setRisk]             = useState(null)
   const [currentRiskId, setCurrentRiskId] = useState(null)
+
+  // Spend category detection
+  const [currentRiskPurpose, setCurrentRiskPurpose] = useState('')
+  const [currentRiskAmount, setCurrentRiskAmount] = useState('')
+  const [currentRiskCurrency, setCurrentRiskCurrency] = useState('USD')
+
   const [loading, setLoading]       = useState(false)
   const [form, setForm]             = useState({
     title: '',
@@ -92,9 +103,16 @@ export default function Treasury() {
   }
 
   const openRisk = async (id) => {
+    const row = requests.find(r => r.id === id)
+
     setRisk(null)
     setCurrentRiskId(id)
     setRiskModal(true)
+
+    setCurrentRiskPurpose(row?.purpose || '')
+    setCurrentRiskAmount(row?.amount ?? '')
+    setCurrentRiskCurrency(row?.currency || 'USD')
+
     try {
       const { data } = await api.get(`/treasury/requests/${id}/risk-score`)
       setRisk(data.risk)
@@ -102,6 +120,7 @@ export default function Treasury() {
       setRisk({ error: e.response?.data?.message || 'Failed to fetch risk score' })
     }
   }
+
 
   const highlightedId = searchParams.get('highlight')
 
@@ -178,6 +197,9 @@ export default function Treasury() {
           )
         }
       />
+
+      {/* Autonomous Financial Loop — addresses judge concern directly */}
+      <AutonomousLoop />
 
       <Table
         columns={cols}
@@ -297,7 +319,36 @@ export default function Treasury() {
 
             {/* Macro window check */}
             {currentRiskId && <MacroWindow requestId={currentRiskId} />}
+
+            {/* SSI Index intelligence — spend category mapped to SoSoValue sector index */}
+            <SSIIntelligence
+              spendCategory={detectCategory(currentRiskPurpose)}
+              amount={currentRiskAmount}
+              currency={currentRiskCurrency}
+            />
+
+            {/* Unified SoSoValue Signal Engine — replaces single-signal Felix */}
+{currentRiskId && (
+  <ApprovalIntelligence requestId={currentRiskId} />
+)}
+
+
+            {/* Socatis AI research reports relevant to this request */}
+            {currentRiskId && (
+              <SocatisReports tags={['ETF', 'INSTITUTIONAL', 'BTC']} />
+            )}
+
+            {/* ValueChain settlement — SoSoValue's own L1 */}
+            {currentRiskId && (
+              <ValueChainSettle
+                requestId={currentRiskId}
+                amount={currentRiskAmount}
+                currency={currentRiskCurrency}
+                status={requests.find(r => r.id === currentRiskId)?.status}
+              />
+            )}
           </div>
+
         )}
       </Modal>
     </div>
@@ -347,3 +398,16 @@ function RiskMetric({ label, value }) {
     </div>
   )
 }
+
+function detectCategory(purpose) {
+  const p = (purpose || '').toLowerCase()
+  if (p.includes('market') || p.includes('brand') || p.includes('campaign')) return 'marketing'
+  if (p.includes('tech') || p.includes('software') || p.includes('platform')) return 'technology'
+  if (p.includes('infra') || p.includes('server') || p.includes('network')) return 'infrastructure'
+  if (p.includes('defi') || p.includes('protocol') || p.includes('liquidity')) return 'defi'
+  if (p.includes('invest') || p.includes('fund') || p.includes('asset')) return 'investment'
+  if (p.includes('legal') || p.includes('compliance') || p.includes('audit')) return 'legal'
+  if (p.includes('research') || p.includes('data') || p.includes('analyt')) return 'research'
+  return 'default'
+}
+

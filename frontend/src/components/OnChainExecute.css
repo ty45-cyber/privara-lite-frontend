@@ -1,0 +1,199 @@
+.onchain-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px dashed var(--green);
+  border-radius: var(--radius);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+
+.onchain-trigger:hover { background: var(--green-dim); }
+
+.onchain-form {
+  border: 1px solid var(--green);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 8px;
+  animation: fadeUp 0.25s ease;
+}
+
+.onchain-form-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: var(--green-dim);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--green);
+}
+
+.onchain-zap { color: var(--green); }
+
+.onchain-form-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--void);
+}
+
+.onchain-label { font-size: 0.58rem; letter-spacing: 0.12em; color: var(--text-dim); }
+
+.onchain-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.onchain-input:focus { border-color: var(--green); }
+
+.onchain-amount-preview {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onchain-network { color: var(--green); font-weight: 500; }
+
+.onchain-error {
+  font-size: 0.65rem;
+  color: var(--red);
+  padding: 8px 10px;
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  border-radius: var(--radius);
+}
+
+.onchain-form-actions { display: flex; gap: 8px; }
+
+.onchain-cancel {
+  flex: 1;
+  padding: 8px;
+  background: none;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.onchain-cancel:hover { color: var(--text-primary); }
+
+.onchain-confirm {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: var(--green);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--obsidian);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.onchain-confirm:hover:not(:disabled) { filter: brightness(1.1); }
+.onchain-confirm:disabled { opacity: 0.4; cursor: not-allowed; }
+.onchain-spin { animation: spin 0.6s linear infinite; }
+
+/* Receipt */
+.onchain-receipt {
+  border: 1px solid var(--green);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 8px;
+  animation: fadeUp 0.3s ease;
+}
+
+.onchain-receipt-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: var(--green-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.onchain-check           { color: var(--green); }
+.onchain-receipt-label   { font-size: 0.6rem; letter-spacing: 0.12em; color: var(--green); }
+
+.onchain-receipt-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--void);
+}
+
+.onchain-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.68rem; }
+.onchain-row-label { font-size: 0.56rem; letter-spacing: 0.1em; color: var(--text-dim); }
+.onchain-row-value { color: var(--text-primary); font-family: var(--font-mono); }
+
+.onchain-tx-hash {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.onchain-tx-hash:hover { opacity: 0.8; }
+
+.onchain-status {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+.onchain-powered {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  font-size: 0.56rem;
+  color: var(--text-dim);
+}
+
+.onchain-powered a {
+  color: var(--amber);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}

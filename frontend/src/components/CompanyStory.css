@@ -5,7 +5,7 @@
   overflow: hidden;
 }
 
-.company-story--landing { margin: 0 auto 28px; max-width: 1100px; }
+.company-story--landing   { margin: 0 auto 28px; max-width: 1100px; }
 .company-story--dashboard { margin-bottom: 24px; }
 
 .cs-header {
@@ -19,11 +19,7 @@
 
 .cs-icon { color: var(--amber); flex-shrink: 0; }
 
-.cs-header-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.cs-header-text { display: flex; flex-direction: column; gap: 2px; }
 
 .cs-company-name {
   font-size: 0.8rem;
@@ -32,13 +28,8 @@
   font-family: var(--font-display);
 }
 
-.cs-company-meta {
-  font-size: 0.58rem;
-  color: var(--text-dim);
-  letter-spacing: 0.06em;
-}
+.cs-company-meta { font-size: 0.58rem; color: var(--text-dim); letter-spacing: 0.06em; }
 
-/* Stats row */
 .cs-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -71,20 +62,9 @@
   line-height: 1;
 }
 
-.cs-stat-label {
-  font-size: 0.56rem;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
+.cs-stat-label { font-size: 0.56rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; }
 
-/* Timeline */
-.cs-timeline {
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+.cs-timeline { padding: 16px 18px; display: flex; flex-direction: column; }
 
 .cs-milestone {
   display: flex;
@@ -95,9 +75,8 @@
 }
 
 .cs-milestone:last-child { border-bottom: none; }
-
-.cs-milestone--current { background: rgba(232,160,32,0.02); }
-.cs-milestone--future   { opacity: 0.5; }
+.cs-milestone--current   { background: rgba(232,160,32,0.02); }
+.cs-milestone--future    { opacity: 0.5; }
 
 .cs-milestone-dot {
   flex-shrink: 0;
@@ -109,48 +88,19 @@
 .cs-dot-icon--done { color: var(--green); }
 
 .cs-dot-empty {
-  width: 12px;
-  height: 12px;
+  width: 12px; height: 12px;
   border-radius: 50%;
   border: 1.5px solid var(--border-bright);
 }
 
-.cs-milestone-content {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-}
+.cs-milestone-content { display: flex; flex-direction: column; gap: 3px; flex: 1; }
 
-.cs-milestone-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.cs-milestone-header { display: flex; align-items: center; gap: 10px; }
 
-.cs-milestone-wave {
-  font-size: 0.56rem;
-  letter-spacing: 0.12em;
-  color: var(--amber);
-  font-weight: 600;
-}
-
-.cs-milestone-date {
-  font-size: 0.58rem;
-  color: var(--text-dim);
-}
-
-.cs-milestone-event {
-  font-size: 0.72rem;
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.cs-milestone-detail {
-  font-size: 0.62rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
+.cs-milestone-wave { font-size: 0.56rem; letter-spacing: 0.12em; color: var(--amber); font-weight: 600; }
+.cs-milestone-date { font-size: 0.58rem; color: var(--text-dim); }
+.cs-milestone-event { font-size: 0.72rem; color: var(--text-primary); font-weight: 500; }
+.cs-milestone-detail { font-size: 0.62rem; color: var(--text-secondary); line-height: 1.5; }
 
 .cs-footer {
   padding: 10px 18px;

@@ -1,0 +1,123 @@
+.agent-panel {
+  border: 1px solid var(--agent-border, var(--amber-dim));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 10px;
+  animation: fadeUp 0.25s ease;
+}
+
+.agent-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--agent-bg, var(--amber-glow));
+  border-bottom: 1px solid var(--agent-border, var(--amber-dim));
+  gap: 10px;
+}
+
+.agent-panel-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-spark { color: var(--agent-color, var(--amber)); }
+
+.agent-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.agent-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--agent-color, var(--amber));
+}
+
+.agent-role {
+  font-size: 0.56rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+.agent-panel-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  background: none;
+  border: 1px solid var(--agent-border, var(--amber-dim));
+  border-radius: var(--radius);
+  color: var(--agent-color, var(--amber));
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.agent-run-btn:hover { background: var(--agent-bg); }
+
+.agent-run-btn--rerun {
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+.agent-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+.agent-spin { animation: spin 0.6s linear infinite; }
+
+.agent-collapse {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.agent-collapse:hover { color: var(--text-primary); }
+
+.agent-panel-body {
+  padding: 14px;
+  background: var(--void);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.agent-output {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+.agent-cursor {
+  display: inline-block;
+  color: var(--agent-color, var(--amber));
+  animation: blink 0.8s step-end infinite;
+  font-size: 0.75rem;
+  line-height: 1;
+  vertical-align: text-bottom;
+}

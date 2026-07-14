@@ -4,9 +4,9 @@ import api from '../lib/api'
 import './MacroCalendar.css'
 
 const RISK_CONFIG = {
-  HIGH:   { color: 'red',   icon: AlertTriangle },
-  MEDIUM: { color: 'amber', icon: TrendingDown  },
-  LOW:    { color: 'green', icon: Clock         },
+  HIGH: { color: 'red', icon: AlertTriangle },
+  MEDIUM: { color: 'amber', icon: TrendingDown },
+  LOW: { color: 'green', icon: Clock },
 }
 
 export default function MacroCalendar() {
@@ -14,8 +14,12 @@ export default function MacroCalendar() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/market/macro-calendar')
-      .then(r => { setEvents(r.data.events || []); setLoading(false) })
+    api
+      .get('/market/macro-calendar')
+      .then((r) => {
+        setEvents(r.data.events || [])
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [])
 
@@ -38,11 +42,11 @@ export default function MacroCalendar() {
         <div className="macro-loading">Loading macro events…</div>
       ) : (
         <div className="macro-events">
-          {events.map(event => {
-            const cfg     = RISK_CONFIG[event.risk_impact] || RISK_CONFIG.LOW
+          {events.map((event) => {
+            const cfg = RISK_CONFIG[event.risk_impact] || RISK_CONFIG.LOW
             const RiskIcon = cfg.icon
-            const days    = daysUntil(event.date)
-            const urgent  = days <= 3
+            const days = daysUntil(event.date)
+            const urgent = days <= 3
 
             return (
               <div
@@ -51,7 +55,10 @@ export default function MacroCalendar() {
               >
                 <div className="macro-event-top">
                   <div className="macro-event-left">
-                    <RiskIcon size={11} className={`macro-risk-icon macro-risk-icon--${cfg.color}`} />
+                    <RiskIcon
+                      size={11}
+                      className={`macro-risk-icon macro-risk-icon--${cfg.color}`}
+                    />
                     <span className="macro-event-title">{event.event}</span>
                   </div>
                   <div className="macro-event-right">
@@ -78,3 +85,4 @@ export default function MacroCalendar() {
     </div>
   )
 }
+

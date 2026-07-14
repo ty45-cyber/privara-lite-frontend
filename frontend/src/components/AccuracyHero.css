@@ -1,0 +1,85 @@
+.accuracy-hero {
+  background: #0b1020;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  color: #eaf0ff;
+}
+
+@media (max-width: 900px) {
+  .accuracy-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ah-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.ah-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ah-value {
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.ah-value--amber {
+  color: #fbbf24;
+}
+
+.ah-value--green {
+  color: #34d399;
+}
+
+.ah-label {
+  font-size: 11px;
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+}
+
+.ah-divider {
+  width: 1px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ah-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.ah-headline {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+.ah-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.ah-badge {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+

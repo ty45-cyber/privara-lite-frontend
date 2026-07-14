@@ -1,0 +1,160 @@
+.sc-loading {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  padding: 10px 0;
+  animation: pulse-amber 1.4s ease infinite;
+}
+
+.sc-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 10px;
+  animation: fadeUp 0.25s ease;
+}
+
+.sc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: var(--void);
+  border-bottom: 1px solid var(--border);
+}
+
+.sc-header-left { display: flex; align-items: center; gap: 7px; }
+
+.sc-icon  { color: var(--blue); }
+.sc-label { font-size: 0.58rem; letter-spacing: 0.12em; color: var(--blue); }
+
+.sc-badge {
+  font-size: 0.56rem;
+  padding: 1px 6px;
+  border: 1px solid rgba(58,123,213,0.3);
+  border-radius: 2px;
+  color: var(--blue);
+  background: var(--blue-dim);
+}
+
+.sc-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.56rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.sc-source:hover { color: var(--amber); }
+
+.sc-reports { padding: 4px 0; }
+
+.sc-report {
+  border-bottom: 1px solid var(--border);
+}
+
+.sc-report:last-child { border-bottom: none; }
+
+.sc-report-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: background 0.12s;
+  gap: 10px;
+}
+
+.sc-report-header:hover { background: var(--surface-2); }
+
+.sc-report-left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+.sc-report-relevance {
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.sc-report-title {
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.sc-report-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.58rem;
+  color: var(--text-dim);
+}
+
+.sc-report-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.sc-tag {
+  font-size: 0.54rem;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-dim);
+}
+
+.sc-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.sc-report-body {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeUp 0.2s ease;
+}
+
+.sc-report-summary {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding: 10px;
+  background: var(--void);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.sc-report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  color: var(--amber);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.sc-report-link:hover { opacity: 0.8; }
+
+.sc-footer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  font-size: 0.54rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.sc-footer svg { color: var(--amber); }

@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!assets|favicon|robots).*)",
+      "source": "/((?!assets|favicon|robots|_next).*)",
       "destination": "/index.html"
     }
   ],
@@ -15,8 +15,10 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Powered-By", "value": "Privara Lite — SoSoValue × Akindo Wave 3" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        { "key": "X-Frame-Options",        "value": "DENY" },
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "Referrer-Policy",         "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Powered-By",            "value": "Privara Lite — SoSoValue × Akindo Wave 3" }
       ]
     }
   ]

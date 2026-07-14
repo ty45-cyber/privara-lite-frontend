@@ -1,0 +1,614 @@
+/* ==========================================================================
+   ApprovalIntelligence.css
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --ai-bg-panel: #12131a;
+  --ai-bg-card: #1c1e27;
+  --ai-border: #2d313f;
+  
+  --ai-text-primary: #ffffff;
+  --ai-text-secondary: #94a3b8;
+  --ai-text-dim: #64748b;
+
+  --ai-color-green: #10b981;
+  --ai-color-green-bg: rgba(16, 185, 129, 0.1);
+  --ai-color-amber: #f59e0b;
+  --ai-color-amber-bg: rgba(245, 158, 11, 0.1);
+  --ai-color-red: #ef4444;
+  --ai-color-red-bg: rgba(239, 68, 68, 0.1);
+  
+  /* Fonts & Transitions */
+  --ai-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ai-transition: all 0.2s ease-in-out;
+}
+
+/* ==========================================================================
+   1. Trigger / Call-to-Action Button
+   ========================================================================== */
+.ai-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #111827 100%);
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  color: #c7d2fe;
+  cursor: pointer;
+  text-align: left;
+  transition: var-ai-transition;
+}
+
+.ai-trigger:hover {
+  background: linear-gradient(135deg, #2e2a75 0%, #1f2937 100%);
+  border-color: #6366f1;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+}
+
+.ai-trigger svg {
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.ai-trigger-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ai-trigger-title {
+  font-family: var(--ai-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ai-trigger-sub {
+  font-size: 12px;
+  color: var(--ai-text-secondary);
+}
+
+/* ==========================================================================
+   2. Loading State (Pulse & Shimmer Animation)
+   ========================================================================== */
+.ai-loading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 24px;
+  background: var(--ai-bg-panel);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+}
+
+.ai-loading-icon {
+  color: #818cf8;
+  animation: ai-pulse 1.5s infinite ease-in-out;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-loading-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-loading-title {
+  font-family: var(--ai-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-loading-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-loading-step {
+  font-size: 11px;
+  color: var(--ai-text-dim);
+  background: var(--ai-bg-card);
+  padding: 4px 8px;
+  border-radius: 4px;
+  animation: ai-shimmer 1.5s infinite ease-in-out;
+}
+
+@keyframes ai-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes ai-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; color: var(--ai-text-secondary); }
+}
+
+/* ==========================================================================
+   3. Error & Retry Container
+   ========================================================================== */
+.ai-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--ai-color-red-bg);
+  border: 1px solid var(--ai-color-red);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 12px;
+}
+
+.ai-error svg {
+  color: var(--ai-color-red);
+  flex-shrink: 0;
+}
+
+.ai-retry {
+  margin-left: auto;
+  background: var(--ai-color-red);
+  color: var(--ai-text-primary);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-family: var(--ai-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--ai-transition);
+}
+
+.ai-retry:hover {
+  background: #dc2626;
+}
+
+/* ==========================================================================
+   4. Component Main Layout & Header
+   ========================================================================== */
+.ai-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--ai-bg-panel);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+  padding: 20px;
+  color: var(--ai-text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--ai-border);
+  padding-bottom: 14px;
+}
+
+.ai-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-header-icon {
+  color: #818cf8;
+}
+
+.ai-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-header-title {
+  font-family: var(--ai-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ai-header-sub {
+  font-size: 11px;
+  color: var(--ai-text-dim);
+}
+
+.ai-rerun {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: var(--ai-font-mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: var(--ai-transition);
+}
+
+.ai-rerun:hover:not(:disabled) {
+  background: var(--ai-bg-card);
+  color: var(--ai-text-primary);
+  border-color: var(--ai-text-dim);
+}
+
+.ai-rerun:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   5. Executive Summary Segment
+   ========================================================================== */
+.ai-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--ai-bg-card);
+  border-left: 4px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+}
+
+.ai-summary--low { border-left-color: var(--ai-color-green); }
+.ai-summary--medium { border-left-color: var(--ai-color-amber); }
+.ai-summary--high { border-left-color: var(--ai-color-red); }
+
+.ai-summary-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ai-risk-block, .ai-rec-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-risk-label, .ai-rec-label {
+  font-family: var(--ai-font-mono);
+  font-size: 9px;
+  color: var(--ai-text-dim);
+  letter-spacing: 0.05em;
+}
+
+.ai-risk-value {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.ai-risk-value--low { color: var(--ai-color-green); }
+.ai-risk-value--medium { color: var(--ai-color-amber); }
+.ai-risk-value--high { color: var(--ai-color-red); }
+
+.ai-risk-score {
+  font-size: 11px;
+  color: var(--ai-text-secondary);
+}
+
+.ai-rec-block {
+  align-items: center;
+}
+
+.ai-rec-icon--green { color: var(--ai-color-green); }
+.ai-rec-icon--amber { color: var(--ai-color-amber); }
+.ai-rec-icon--red { color: var(--ai-color-red); }
+
+.ai-rec-label--green { color: var(--ai-color-green); font-size: 13px; font-weight: 700; }
+.ai-rec-label--amber { color: var(--ai-color-amber); font-size: 13px; font-weight: 700; }
+.ai-rec-label--red { color: var(--ai-color-red); font-size: 13px; font-weight: 700; }
+
+.ai-verdicts {
+  display: flex;
+  gap: 12px;
+}
+
+.ai-verdict-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 6px 10px;
+  border-radius: 6px;
+  min-width: 60px;
+}
+
+.ai-verdict-num {
+  font-family: var(--ai-font-mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ai-verdict-sub {
+  font-size: 9px;
+  color: var(--ai-text-dim);
+}
+
+.ai-verdict-stat--green .ai-verdict-num { color: var(--ai-color-green); }
+.ai-verdict-stat--amber .ai-verdict-num { color: var(--ai-color-amber); }
+.ai-verdict-stat--red .ai-verdict-num { color: var(--ai-color-red); }
+
+.ai-exec-summary {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ai-text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   6. Signal Breakdown & List Accordion
+   ========================================================================== */
+.ai-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-signals-label {
+  font-family: var(--ai-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ai-text-dim);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.ai-signal {
+  background: var(--ai-bg-card);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ai-signal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: var(--ai-transition);
+}
+
+.ai-signal-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ai-signal-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-signal-icon--green { color: var(--ai-color-green); }
+.ai-signal-icon--amber { color: var(--ai-color-amber); }
+.ai-signal-icon--red { color: var(--ai-color-red); }
+.ai-signal-icon--dim { color: var(--ai-text-dim); }
+
+.ai-signal-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-signal-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ai-signal-endpoint {
+  font-size: 10px;
+  color: var(--ai-text-dim);
+  font-family: var(--ai-font-mono);
+}
+
+.ai-signal-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-signal-value {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--ai-font-mono);
+}
+
+.ai-signal-adj {
+  font-family: var(--ai-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ai-adj--good { color: var(--ai-color-green); }
+.ai-adj--bad { color: var(--ai-color-red); }
+
+.ai-signal-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--ai-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.ai-signal-verdict--green { background: var(--ai-color-green-bg); color: var(--ai-color-green); }
+.ai-signal-verdict--amber { background: var(--ai-color-amber-bg); color: var(--ai-color-amber); }
+.ai-signal-verdict--red { background: var(--ai-color-red-bg); color: var(--ai-color-red); }
+.ai-signal-verdict--dim { background: rgba(255, 255, 255, 0.05); color: var(--ai-text-dim); }
+
+.ai-chevron {
+  color: var(--ai-text-dim);
+}
+
+/* Dropdown Content */
+.ai-signal-detail {
+  padding: 12px;
+  border-top: 1px solid var(--ai-border);
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-signal-insight {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ai-text-secondary);
+  margin: 0 0 4px 0;
+}
+
+.ai-signal-direction {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.ai-direction-label {
+  color: var(--ai-text-dim);
+  font-family: var(--ai-font-mono);
+  font-size: 9px;
+}
+
+.ai-direction-value {
+  font-weight: 600;
+}
+
+.ai-direction-value--green { color: var(--ai-color-green); }
+.ai-direction-value--amber { color: var(--ai-color-amber); }
+.ai-direction-value--red { color: var(--ai-color-red); }
+
+.ai-signal-source {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--ai-font-mono);
+  font-size: 9px;
+  color: var(--ai-text-dim);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   7. Score Breakdown & Bars
+   ========================================================================== */
+.ai-score-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--ai-bg-card);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+}
+
+.ai-score-label {
+  font-family: var(--ai-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ai-text-dim);
+  letter-spacing: 0.05em;
+}
+
+.ai-score-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-score-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ai-score-item-name {
+  font-size: 11px;
+  color: var(--ai-text-secondary);
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-score-bar-wrap {
+  flex-grow: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ai-score-bar {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.ai-score-bar--good { background-color: var(--ai-color-green); }
+.ai-score-bar--bad { background-color: var(--ai-color-red); }
+
+.ai-score-item-val {
+  font-family: var(--ai-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  width: 30px;
+  text-align: right;
+}
+
+.ai-score-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ai-border);
+  font-family: var(--ai-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ai-score-total-val {
+  font-size: 14px;
+}
+
+.ai-score-total-val--low { color: var(--ai-color-green); }
+.ai-score-total-val--medium { color: var(--ai-color-amber); }
+.ai-score-total-val--high { color: var(--ai-color-red); }
+
+/* ==========================================================================
+   8. Component Footer Styles
+   ========================================================================== */
+.ai-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--ai-text-dim);
+  padding-top: 8px;
+}
+
+.ai-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #818cf8;
+  text-decoration: none;
+  transition: var(--ai-transition);
+}
+
+.ai-footer a:hover {
+  color: #a5b4fc;
+  text-decoration: underline;
+}
