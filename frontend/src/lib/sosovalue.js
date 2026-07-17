@@ -13,6 +13,27 @@
 // The composite result merges live data with seeded fallback per field.
 // =============================================================================
 
+const safeParseFloat = (val) => {
+  if (val === undefined || val === null) return 0;
+  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  
+  // Convert to string and strip out currency signs, commas, and spaces
+  let cleanStr = String(val).replace(/[$,\s]/g, '');
+  
+  // Handle text suffixes if the API sends back shorthand letters
+  let multiplier = 1;
+  if (cleanStr.toLowerCase().endsWith('m')) {
+    multiplier = 1_000_000;
+    cleanStr = cleanStr.slice(0, -1);
+  } else if (cleanStr.toLowerCase().endsWith('b')) {
+    multiplier = 1_000_000_000;
+    cleanStr = cleanStr.slice(0, -1);
+  }
+  
+  const parsed = parseFloat(cleanStr);
+  return isNaN(parsed) ? 0 : parsed * multiplier;
+};
+
 const SSV_API_KEY = import.meta.env.VITE_SOSOVALUE_API_KEY || ''
 const SSV_BASE    = 'https://api.sosovalue.xyz'
 const SSV_OPEN    = 'https://openapi.sosovalue.com'
@@ -33,7 +54,6 @@ const fetchWithTimeout = async (url, options = {}, timeoutMs = 6000) => {
     return resp
   } catch (e) {
     clearTimeout(timer)
-    // Re-throw with a more informative message
     throw new Error(
       e.name === 'AbortError'
         ? `Request to ${url} timed out after ${timeoutMs}ms`
@@ -56,18 +76,8 @@ const safeJson = async (resp) => {
 // ENDPOINT 1 — BTC Spot ETF Metrics
 // POST https://api.sosovalue.xyz/openapi/v2/etf/currentEtfDataMetrics
 // Body: { "type": "us-btc-spot" }
-//
-// Returns: dailyNetInflow (USD), totalNetAssets (USD),
-//          dailyTotalValueTraded (USD), cumNetInflow (USD)
-//
-// Used for: Flow direction, volatility proxy, composite risk score signal 1
 // =============================================================================
 export const fetchBTCETFMetrics = async () => {
-  if (!SSV_API_KEY) {
-    console.info('[SoSoValue] No API key — ETF metrics using seeded data')
-    return null
-  }
-
   try {
     const resp = await fetchWithTimeout(
       `${SSV_BASE}/openapi/v2/etf/currentEtfDataMetrics`,
@@ -90,10 +100,10 @@ export const fetchBTCETFMetrics = async () => {
     const payload = json?.data ?? json?.result ?? json ?? {}
     const list    = Array.isArray(payload) ? payload[0] : payload
 
-    const dailyNetInflow        = parseFloat(list?.dailyNetInflow        ?? list?.daily_net_inflow        ?? 0)
-    const totalNetAssets        = parseFloat(list?.totalNetAssets         ?? list?.total_net_assets         ?? 0)
-    const dailyTotalValueTraded = parseFloat(list?.dailyTotalValueTraded  ?? list?.daily_total_value_traded ?? 0)
-    const cumNetInflow          = parseFloat(list?.cumNetInflow           ?? list?.cum_net_inflow           ?? 0)
+    const dailyNetInflow        = safeParseFloat(list?.dailyNetInflow        ?? list?.daily_net_inflow        ?? list?.inflow ?? 0)
+    const totalNetAssets        = safeParseFloat(list?.totalNetAssets        ?? list?.total_net_assets        ?? list?.aum ?? 0)
+    const dailyTotalValueTraded = safeParseFloat(list?.dailyTotalValueTraded  ?? list?.daily_total_value_traded ?? 0)
+    const cumNetInflow          = safeParseFloat(list?.cumNetInflow          ?? list?.cum_net_inflow          ?? 0)
 
     // Sanity check — reject clearly invalid data
     if (totalNetAssets === 0 && dailyNetInflow === 0) {
@@ -101,7 +111,7 @@ export const fetchBTCETFMetrics = async () => {
       return null
     }
 
-    console.info(`[SoSoValue] ETF metrics LIVE — inflow: $${(dailyNetInflow / 1e6).toFixed(0)}M, AUM: $${(totalNetAssets / 1e9).toFixed(1)}B`)
+    console.log(`[SoSoValue] ETF metrics LIVE — inflow: $${(dailyNetInflow / 1e6).toFixed(2)}M, AUM: $${(totalNetAssets / 1e9).toFixed(2)}B`)
 
     return {
       dailyNetInflow,
@@ -121,18 +131,7 @@ export const fetchBTCETFMetrics = async () => {
 // =============================================================================
 // ENDPOINT 2 — AI News Sentiment Feed
 // GET https://openapi.sosovalue.com/api/v1/news/featured/currency
-// Params: pageNum=1, pageSize=30, categoryList=1,2,5,6
-//
-// Returns: list of AI-tagged news items
-//
-// Single-pass O(n) sentiment scoring:
-//   - Each item's tags scanned for bullish/bearish signals
-//   - Research and macro categories weighted 2x
-//   - Output: 0-100 score, label, top 6 tags, top headline
-//
-// Used for: Composite risk score signal 2
 // =============================================================================
-
 const BULLISH_TAGS = new Set([
   'BULL', 'BULLISH', 'INFLOW', 'ADOPTION', 'RALLY',
   'INSTITUTIONAL', 'POSITIVE', 'UPGRADE', 'PARTNERSHIP',
@@ -155,7 +154,7 @@ export const fetchNewsSentiment = async () => {
 
   try {
     const url  = `${SSV_OPEN}/api/v1/news/featured/currency`
-             + `?pageNum=1&pageSize=30&categoryList=1,2,5,6`
+               + `?pageNum=1&pageSize=30&categoryList=1,2,5,6`
     const resp = await fetchWithTimeout(url, { headers: SSV_HEADERS })
 
     if (!resp.ok) {
@@ -182,7 +181,6 @@ export const fetchNewsSentiment = async () => {
     const tagFreq    = {}
 
     items.forEach(item => {
-      // Tags may be array of strings or array of objects
       const rawTags = item.tags       ??
                       item.aiTags     ??
                       item.ai_tags    ??
@@ -190,8 +188,7 @@ export const fetchNewsSentiment = async () => {
                       []
 
       const tags     = rawTags.map(t => (typeof t === 'string' ? t : t?.name ?? t?.tag ?? '').toUpperCase())
-      // Change this line inside items.forEach:
-const category = String(item.category ?? item.type ?? '').toLowerCase()
+      const category = String(item.category ?? item.type ?? '').toLowerCase()
       const weight   = CATEGORY_WEIGHTS[category] ?? 1
 
       tags.forEach(tag => {
@@ -214,7 +211,6 @@ const category = String(item.category ?? item.type ?? '').toLowerCase()
       .map(([tag]) => tag)
 
     const topHeadline = items[0]?.title ?? items[0]?.headline ?? items[0]?.subject ?? ''
-
     const label = clampedScore > 65 ? 'BULLISH' : clampedScore > 40 ? 'NEUTRAL' : 'BEARISH'
 
     console.info(`[SoSoValue] News sentiment LIVE — ${clampedScore}/100 ${label}, ${items.length} articles`)
@@ -237,14 +233,8 @@ const category = String(item.category ?? item.type ?? '').toLowerCase()
 }
 
 // =============================================================================
-// ENDPOINT 3A — Coin List (BTC Price) — SoSoValue primary
+// ENDPOINT 3 — Coin List (BTC Price) — SoSoValue primary
 // POST https://openapi.sosovalue.com/openapi/v1/data/default/coin/list
-// Body: { pageNum: 1, pageSize: 5, sortField: "marketCap", sortOrder: "desc" }
-//
-// Returns: BTC real-time price and 24h change
-//
-// Used for: Price display, composite risk context
-// Fallback chain: SoSoValue → CoinGecko → Binance
 // =============================================================================
 export const fetchBTCPrice = async () => {
   // Tier 1: SoSoValue
@@ -296,7 +286,7 @@ export const fetchBTCPrice = async () => {
     }
   }
 
-  // Tier 2: CoinGecko
+  // Tier 2: CoinGecko Fallback
   return fetchBTCPriceCoinGecko()
 }
 
@@ -372,16 +362,7 @@ const fetchBTCPriceBinance = async () => {
 }
 
 // =============================================================================
-// COMPOSITE: Full Market Intelligence
-//
-// Calls all three SoSoValue endpoints in parallel.
-// Merges results — live fields take priority, seeded fallback fills gaps.
-// Never throws — always returns a complete intelligence object.
-//
-// source_mode:
-//   'LIVE'  — at least one SoSoValue endpoint responded
-//   'MIXED' — partial live data (some endpoints failed)
-//   'MOCK'  — all endpoints failed, using seeded data only
+// COMPOSITE: Full Market Intelligence Orchestrator
 // =============================================================================
 export const fetchLiveMarketIntelligence = async (seedData) => {
   // Run all three in parallel — failures are caught individually
@@ -431,7 +412,7 @@ export const fetchLiveMarketIntelligence = async (seedData) => {
 
   return {
     // ETF fields — live or seeded
-    btc_etf_daily_inflow_usd:   etfData?.dailyNetInflow          ?? seedData.btc_etf_daily_inflow_usd,
+    btc_etf_daily_inflow_usd:   etfData?.dailyNetInflow           ?? seedData.btc_etf_daily_inflow_usd,
     btc_etf_total_assets_usd:   etfData?.totalNetAssets           ?? seedData.btc_etf_total_assets_usd,
     btc_etf_daily_volume_usd:   etfData?.dailyTotalValueTraded    ?? seedData.btc_etf_daily_volume_usd,
     btc_etf_cum_inflow_usd:     etfData?.cumNetInflow             ?? seedData.btc_etf_cum_inflow_usd,

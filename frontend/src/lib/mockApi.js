@@ -1,3 +1,24 @@
+const safeParseFloat = (val) => {
+  if (val === undefined || val === null) return 0;
+  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  
+  // Convert to string and clean out currency signs, commas, and spaces
+  let cleanStr = String(val).replace(/[$,\s]/g, '');
+  
+  // Account for shorthand suffixes if the API delivers them pre-formatted
+  let multiplier = 1;
+  if (cleanStr.toLowerCase().endsWith('m')) {
+    multiplier = 1_000_000;
+    cleanStr = cleanStr.slice(0, -1);
+  } else if (cleanStr.toLowerCase().endsWith('b')) {
+    multiplier = 1_000_000_000;
+    cleanStr = cleanStr.slice(0, -1);
+  }
+  
+  const parsed = parseFloat(cleanStr);
+  return isNaN(parsed) ? 0 : parsed * multiplier;
+};
+
 import {
   USERS, CREDENTIALS, PAYROLL_BATCHES, PAYROLL_RECORDS,
   TREASURY_REQUESTS, PROPOSALS, VOTE_TALLIES,
