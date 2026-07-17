@@ -534,7 +534,7 @@ export const mockAuditPdf = async (resourceType, resourceId) => {
 //        all call this on page load).
 
 import { fetchLiveMarketIntelligence } from './sosovalue.js'
-import { MARKET_INTELLIGENCE }         from './mockData.js'
+
 
 let _intelligenceCache    = null
 let _intelligenceCacheTs  = 0
