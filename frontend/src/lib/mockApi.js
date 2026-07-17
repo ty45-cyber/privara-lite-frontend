@@ -566,17 +566,18 @@ export const mockEtfSummary = async () => {
   await delay(50)
   const { intelligence: intel } = await mockMarketIntelligence()
 
+  // Safely parse values to numbers so downstream components don't crash on .toFixed()
   return {
-    daily_inflow:       intel.btc_etf_daily_inflow_usd,
-    total_assets:       intel.btc_etf_total_assets_usd,
-    cum_inflow:         intel.btc_etf_cum_inflow_usd,
+    daily_inflow:       Number(intel.btc_etf_daily_inflow_usd) || 0,
+    total_assets:       Number(intel.btc_etf_total_assets_usd) || 0,
+    cum_inflow:         Number(intel.btc_etf_cum_inflow_usd) || 0,
     inflow_signal:      intel.inflow_signal,
-    btc_price:          intel.btc_price_usd,
-    btc_change_pct:     intel.btc_24h_change_pct,
+    btc_price:          Number(intel.btc_price_usd) || 0,
+    btc_change_pct:     Number(intel.btc_24h_change_pct) || 0,
     sentiment:          intel.sentiment_label,
-    sentiment_score:    intel.sentiment_score,
+    sentiment_score:    Number(intel.sentiment_score) || 0,
     top_tags:           intel.top_news_tags,
-    sodex_tvl:          intel.sodex_tvl_usd,
+    sodex_tvl:          Number(intel.sodex_tvl_usd) || 0,
     data_sources:       intel.data_sources,
     powered_by:         intel.powered_by,
     live:               intel.live,
