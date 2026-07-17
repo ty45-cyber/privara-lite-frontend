@@ -523,67 +523,119 @@ export const mockAuditPdf = async (resourceType, resourceId) => {
   return new Blob([lines.join('\n')], { type: 'application/pdf' })
 }
 
-// ── MARKET INTELLIGENCE ───────────────────────────────────────────────────────
+// ── MARKET INTELLIGENCE ──────────────────────────────────────────────────────
+// ── LIVE SOSOVALUE MARKET INTELLIGENCE ───────────────────────────────────────
+// Replaces the pure-mock market intelligence with a live-first approach.
+// Calls SoSoValue API directly from the browser.
+// Falls back to seeded data if API key is missing or endpoints fail.
+//
+// Cache: 60-second TTL — prevents rate limiting when multiple components
+//        mount simultaneously (MarketIntel + SentinelBanner + ApprovalIntelligence
+//        all call this on page load).
+
+import { fetchLiveMarketIntelligence } from './sosovalue.js'
+import { MARKET_INTELLIGENCE }         from './mockData.js'
+
+let _intelligenceCache    = null
+let _intelligenceCacheTs  = 0
+const CACHE_TTL_MS        = 60_000  // 60 seconds
 
 export const mockMarketIntelligence = async () => {
-  await delay(800)
-  const jitter = () => 1 + (Math.random() - 0.5) * 0.05
-  return {
-    intelligence: {
-      ...MARKET_INTELLIGENCE,
-      btc_etf_daily_inflow_usd: Math.round(MARKET_INTELLIGENCE.btc_etf_daily_inflow_usd * jitter()),
-      btc_price_usd:            Math.round(MARKET_INTELLIGENCE.btc_price_usd * jitter()),
-      btc_24h_change_pct:       parseFloat((MARKET_INTELLIGENCE.btc_24h_change_pct * jitter()).toFixed(2)),
-      sodex_volume_24h:         Math.round(MARKET_INTELLIGENCE.sodex_volume_24h * jitter()),
-      sentiment_score:          Math.min(100, Math.max(0,
-        MARKET_INTELLIGENCE.sentiment_score + Math.floor((Math.random() - 0.5) * 6)
-      )),
-    },
+  // Minimal artificial delay — real latency comes from the API calls themselves
+  await delay(50)
+
+  const now = Date.now()
+
+  // Serve cache if fresh — prevents multiple simultaneous API calls
+  if (_intelligenceCache && (now - _intelligenceCacheTs) < CACHE_TTL_MS) {
+    return { intelligence: _intelligenceCache }
   }
+
+  // Attempt live SoSoValue fetch (with graceful fallback built in)
+  const live = await fetchLiveMarketIntelligence(MARKET_INTELLIGENCE)
+
+  // Cache the result
+  _intelligenceCache   = live
+  _intelligenceCacheTs = now
+
+  return { intelligence: live }
 }
 
 export const mockEtfSummary = async () => {
-  await delay(600)
-  const intel = (await mockMarketIntelligence()).intelligence
+  // Reuse the same cached intelligence — no duplicate API calls
+  await delay(50)
+  const { intelligence: intel } = await mockMarketIntelligence()
+
   return {
-    daily_inflow:    intel.btc_etf_daily_inflow_usd,
-    total_assets:    intel.btc_etf_total_assets_usd,
-    cum_inflow:      intel.btc_etf_cum_inflow_usd,
-    inflow_signal:   intel.inflow_signal,
-    btc_price:       intel.btc_price_usd,
-    btc_change_pct:  intel.btc_24h_change_pct,
-    sentiment:       intel.sentiment_label,
-    sentiment_score: intel.sentiment_score,
-    top_tags:        intel.top_news_tags,
-    sodex_tvl:       intel.sodex_tvl_usd,
-    data_sources:    intel.data_sources,
-    powered_by:      intel.powered_by,
+    daily_inflow:       intel.btc_etf_daily_inflow_usd,
+    total_assets:       intel.btc_etf_total_assets_usd,
+    cum_inflow:         intel.btc_etf_cum_inflow_usd,
+    inflow_signal:      intel.inflow_signal,
+    btc_price:          intel.btc_price_usd,
+    btc_change_pct:     intel.btc_24h_change_pct,
+    sentiment:          intel.sentiment_label,
+    sentiment_score:    intel.sentiment_score,
+    top_tags:           intel.top_news_tags,
+    sodex_tvl:          intel.sodex_tvl_usd,
+    data_sources:       intel.data_sources,
+    powered_by:         intel.powered_by,
+    live:               intel.live,
+    source_mode:        intel.source_mode,
+    etf_live:           intel.etf_live,
+    sentiment_live:     intel.sentiment_live,
+    price_live:         intel.price_live,
+    price_source:       intel.price_source,
   }
 }
 
+// Cache invalidation — call this if you need to force a fresh fetch
+// e.g. after a manual refresh button press
+export const invalidateIntelligenceCache = () => {
+  _intelligenceCache   = null
+  _intelligenceCacheTs = 0
+}
+
+
 export const mockBriefing = async (body) => {
   await delay(2400)
-  const intel    = MARKET_INTELLIGENCE
-  const amount   = body.treasury_amount
-  const risk     = amount > 200000 ? 'HIGH' : amount > 80000 ? 'MEDIUM' : 'LOW'
-  const rec      = risk === 'HIGH' ? 'DELAY' : 'APPROVE'
+
+  // Use live intelligence if cached — otherwise fall back to seed
+  const intel = _intelligenceCache || MARKET_INTELLIGENCE
+
+  const amount = body.treasury_amount || body.amount || 0
+  const risk   = amount > 200000 ? 'HIGH' : amount > 80000 ? 'MEDIUM' : 'LOW'
+  const rec    = risk === 'HIGH' ? 'DELAY' : 'APPROVE'
+
+  const inflowUsd    = intel.btc_etf_daily_inflow_usd || MARKET_INTELLIGENCE.btc_etf_daily_inflow_usd
+  const sentScore    = intel.sentiment_score          || MARKET_INTELLIGENCE.sentiment_score
+  const sentLabel    = intel.sentiment_label          || MARKET_INTELLIGENCE.sentiment_label
+  const tags         = intel.top_news_tags            || MARKET_INTELLIGENCE.top_news_tags
+  const inflowSignal = intel.inflow_signal            || MARKET_INTELLIGENCE.inflow_signal
+  const btcPrice     = intel.btc_price_usd            || MARKET_INTELLIGENCE.btc_price_usd
+  const isLive       = !!_intelligenceCache?.live
+
   return {
     briefing: {
-      headline:          `${intel.sentiment_label} market conditions with ${intel.inflow_signal.toLowerCase()} ETF flows ${risk === 'LOW' ? 'support' : 'warrant caution on'} this treasury request.`,
-      etf_signal:        `BTC Spot ETF recorded $${(intel.btc_etf_daily_inflow_usd / 1e6).toFixed(0)}M net inflow today, signalling institutional risk-on positioning.`,
-      sentiment_signal:  `SoSoValue AI news sentiment at ${intel.sentiment_score}/100 (${intel.sentiment_label}) driven by ${intel.top_news_tags.slice(0, 2).join(' + ')} signals.`,
-      recommendation:    rec,
-      confidence:        risk === 'LOW' ? 'HIGH' : 'MEDIUM',
-      risk_note:         `Primary watch: ${amount > 200000 ? 'Large position size relative to operating reserve. Ensure quorum.' : 'Monitor ETF flows for next 24h before final sign-off.'}`,
+      headline:         `${sentLabel} market conditions with ${inflowSignal.toLowerCase()} ETF flows ${risk === 'LOW' ? 'support' : 'warrant caution on'} this treasury request.`,
+      etf_signal:       `BTC Spot ETF recorded $${(inflowUsd / 1e6).toFixed(0)}M net ${inflowSignal.toLowerCase()} today, signalling institutional ${inflowUsd > 0 ? 'risk-on' : 'risk-off'} positioning.`,
+      sentiment_signal: `SoSoValue AI news sentiment at ${sentScore}/100 (${sentLabel}) driven by ${(tags || []).slice(0, 2).join(' + ')} signals.`,
+      recommendation:   rec,
+      confidence:       risk === 'LOW' ? 'HIGH' : 'MEDIUM',
+      risk_note:        amount > 200000
+        ? 'Large position size relative to operating reserve. Ensure full quorum before proceeding.'
+        : 'Monitor ETF flows for next 24h before final sign-off.',
+      data_freshness:   isLive ? 'LIVE — SoSoValue API' : 'SEEDED — Add VITE_SOSOVALUE_API_KEY for live data',
     },
     market_snapshot: {
-      btc_price:    intel.btc_price_usd,
-      inflow_signal:intel.inflow_signal,
-      sentiment:    intel.sentiment_label,
-      data_sources: intel.data_sources,
+      btc_price:     btcPrice,
+      inflow_signal: inflowSignal,
+      sentiment:     sentLabel,
+      data_sources:  intel.data_sources || MARKET_INTELLIGENCE.data_sources,
+      live:          isLive,
     },
   }
 }
+
 
 export const mockSectorRotation = async () => {
   await delay(680)

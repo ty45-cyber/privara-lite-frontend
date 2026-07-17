@@ -265,4 +265,144 @@
   .mi-block { border-bottom: 1px solid var(--border); padding-bottom: 12px; }
   .mi-block:last-child { border-bottom: none; padding-bottom: 0; }
 }
+/* ── Live / Mock accent line ──────────────────────────────────────────────── */
+.mi-accent-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  pointer-events: none;
+}
+
+.mi-accent-line--live {
+  background: linear-gradient(90deg, var(--green), var(--amber), transparent);
+  animation: shimmer 3s linear infinite;
+  background-size: 200% 100%;
+}
+
+.mi-accent-line--seeded {
+  background: linear-gradient(90deg, var(--amber-dim), var(--border), transparent);
+}
+
+/* ── Live badge ───────────────────────────────────────────────────────────── */
+.mi-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.mi-live-badge--live {
+  color: var(--green);
+  border-color: rgba(46,168,126,0.4);
+  background: var(--green-dim);
+  animation: pulse-amber 2.5s ease infinite;
+}
+
+.mi-live-badge--mock {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: transparent;
+}
+
+/* ── Per-endpoint dots ────────────────────────────────────────────────────── */
+.mi-source-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mi-ep-dot {
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid;
+  cursor: default;
+}
+
+.mi-ep-dot--live {
+  color: var(--green);
+  border-color: rgba(46,168,126,0.3);
+  background: var(--green-dim);
+}
+
+.mi-ep-dot--dead {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: transparent;
+}
+
+/* ── Inline live dot (next to values) ────────────────────────────────────── */
+.mi-live-dot-inline {
+  font-size: 0.5rem;
+  color: var(--green);
+  margin-left: 4px;
+  animation: pulse-amber 2s ease infinite;
+}
+
+.mi-live-dot-inline--ssv { color: var(--amber); }
+
+/* ── Pulse icon — green when live ────────────────────────────────────────── */
+.mi-pulse-icon--live { color: var(--green); }
+
+/* ── Sentiment header row ─────────────────────────────────────────────────── */
+.mi-sentiment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.mi-articles-count {
+  font-size: 0.54rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ── Source badge — live variant ─────────────────────────────────────────── */
+.mi-source-badge--live {
+  color: var(--green);
+  border-color: rgba(46,168,126,0.3) !important;
+  background: var(--green-dim) !important;
+}
+
+/* ── Setup hint banner ────────────────────────────────────────────────────── */
+.mi-setup-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+}
+
+.mi-setup-hint svg { color: var(--text-dim); flex-shrink: 0; }
+
+.mi-setup-hint code {
+  background: var(--surface);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--amber);
+  border: 1px solid var(--amber-dim);
+}
+
+.mi-setup-hint a {
+  color: var(--amber);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.mi-setup-hint a:hover { opacity: 0.8; }
 

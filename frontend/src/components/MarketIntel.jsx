@@ -1,197 +1,327 @@
-import { useEffect, useMemo, useState } from 'react'
-import { RefreshCcw, Signal, Database } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import {
+  TrendingUp, TrendingDown, Zap, ExternalLink,
+  RefreshCw, Activity, Wifi, WifiOff
+} from 'lucide-react'
 import api from '../lib/api'
-import { getUser } from '../lib/auth'
+import { invalidateIntelligenceCache } from '../lib/mockApi.js'
 import './MarketIntel.css'
 
-const formatCompactUSD = (n) => {
-  const v = Number(n)
-  if (!Number.isFinite(v)) return '—'
-  if (Math.abs(v) >= 1e12) return `$${(v / 1e12).toFixed(1)}T`
-  if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1)}B`
-  if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`
-  if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(1)}K`
-  return `$${v.toFixed(0)}`
-}
-
-const sentimentToBand = (score) => {
-  const s = Number(score)
-  if (!Number.isFinite(s)) return { cursorPct: 50, cls: 'mi-sent--neutral', label: 'NEUTRAL' }
-  // 0..100 => 0..100
-  const cursorPct = Math.min(100, Math.max(0, s))
-  if (s >= 66) return { cursorPct, cls: 'mi-sent--bullish', label: 'BULLISH' }
-  if (s <= 34) return { cursorPct, cls: 'mi-sent--bearish', label: 'BEARISH' }
-  return { cursorPct, cls: 'mi-sent--neutral', label: 'NEUTRAL' }
-}
+const REFRESH_MS = 60_000  // 60s auto-refresh — matches server cache TTL
 
 export default function MarketIntel() {
-  const user = getUser()
-  const canView = useMemo(() => ['admin', 'finance', 'hr'].includes(user?.role), [user?.role])
-
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [data, setData] = useState(null)
+  const [data, setData]           = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
+  const [lastFetch, setLastFetch] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [isLive, setIsLive]       = useState(false)
+  const [sourceMode, setSourceMode] = useState('MOCK')
+  const [liveBreakdown, setLiveBreakdown] = useState({
+    etf:       false,
+    sentiment: false,
+    price:     false,
+    priceSource: 'seeded',
+  })
 
-  const fetchIntel = async () => {
-    setError(null)
-    try {
-      setLoading(true)
-      const resp = await api.get('/market/intelligence')
-      setData(resp.data?.intelligence ? resp.data : resp.data) // defensive
-      setLoading(false)
-    } catch (e) {
-      setError(e)
-      setLoading(false)
+  const fetchData = useCallback(async (isManual = false) => {
+    if (isManual) {
+      setRefreshing(true)
+      // Invalidate cache so we get a fresh fetch on manual refresh
+      invalidateIntelligenceCache()
     }
-  }
 
-  const refresh = async () => {
-    setRefreshing(true)
     try {
-      const resp = await api.get('/market/intelligence')
-      setData(resp.data?.intelligence ? resp.data : resp.data)
+      const r = await api.get('/market/intelligence')
+      const intel = r.data.intelligence
+
+      setData(intel)
+      setIsLive(intel?.live === true)
+      setSourceMode(intel?.source_mode ?? 'MOCK')
+      setLiveBreakdown({
+        etf:         intel?.etf_live         ?? false,
+        sentiment:   intel?.sentiment_live   ?? false,
+        price:       intel?.price_live       ?? false,
+        priceSource: intel?.price_source     ?? 'seeded',
+      })
+      setLastFetch(new Date())
       setError(null)
     } catch (e) {
-      setError(e)
+      setError(e.response?.data?.message || 'SoSoValue API unreachable')
     } finally {
+      setLoading(false)
       setRefreshing(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
-    if (!canView) return
-    fetchIntel()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canView])
+    fetchData()
+    const timer = setInterval(() => fetchData(), REFRESH_MS)
+    return () => clearInterval(timer)
+  }, [fetchData])
 
-  if (!canView) return null
+  const fmtUSD = (v) => {
+    if (!v && v !== 0) return '—'
+    const a    = Math.abs(v)
+    const sign = v < 0 ? '-' : ''
+    if (a >= 1e9) return `${sign}$${(a / 1e9).toFixed(2)}B`
+    if (a >= 1e6) return `${sign}$${(a / 1e6).toFixed(1)}M`
+    return `${sign}$${(a / 1e3).toFixed(0)}K`
+  }
 
-  const intel = data?.intelligence || data
-  const sentimentScore = intel?.sentiment_score
-  const band = sentimentToBand(sentimentScore)
+  if (loading) return <MISkeleton />
+  if (error)   return <MIError message={error} onRetry={() => fetchData(true)} />
 
-  const flowBadge = intel?.inflow_signal === 'INFLOW'
-    ? { cls: 'mi-signal-badge--inflow', label: 'ETF INFLOW' }
-    : intel?.inflow_signal === 'OUTFLOW'
-      ? { cls: 'mi-signal-badge--outflow', label: 'ETF OUTFLOW' }
-      : { cls: 'mi-signal-badge--neutral', label: 'BALANCED' }
-
-  const poweredBy = intel?.powered_by || 'SoSoValue API + SoDEX'
+  const inflowPos = (data?.btc_etf_daily_inflow_usd ?? 0) > 0
+  const btcPos    = (data?.btc_24h_change_pct ?? 0) > 0
 
   return (
-    <section className={`market-intel ${error ? 'market-intel--error' : ''}`}>
+    <div className="market-intel">
+      {/* Accent line — green when live, amber when seeded */}
+      <div className={`mi-accent-line mi-accent-line--${isLive ? 'live' : 'seeded'}`} />
+
+      {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="mi-header">
         <div className="mi-header-left">
-          <Signal size={12} className={`mi-pulse-icon ${error ? 'mi-pulse-icon--error' : ''}`} />
+          <Activity size={12} className={`mi-pulse-icon ${isLive ? 'mi-pulse-icon--live' : ''}`} />
           <span className="mi-label">MARKET INTELLIGENCE</span>
-          <span className={['BULLISH', 'BEARISH'].includes(band.label) ? `mi-sent-label ${band.cls}` : `mi-sent-label ${band.cls}`}>
-            {band.label}
+          <span className={`mi-signal-badge mi-signal-badge--${(data?.inflow_signal ?? 'neutral').toLowerCase()}`}>
+            {data?.inflow_signal ?? 'NEUTRAL'}
           </span>
         </div>
 
         <div className="mi-header-right">
-          <span className={`mi-signal-badge ${flowBadge.cls}`}>{flowBadge.label}</span>
+          {/* Live / Mock badge */}
+          <div className={`mi-live-badge ${isLive ? 'mi-live-badge--live' : 'mi-live-badge--mock'}`}>
+            {isLive
+              ? <><Wifi size={9} /> LIVE — SOSOVALUE API</>
+              : <><WifiOff size={9} /> SEEDED DATA</>
+            }
+          </div>
+
+          {/* Per-endpoint live indicators when live */}
+          {isLive && (
+            <div className="mi-source-dots">
+              <EndpointDot label="ETF"  live={liveBreakdown.etf}  />
+              <EndpointDot label="NEWS" live={liveBreakdown.sentiment} />
+              <EndpointDot
+                label={liveBreakdown.priceSource === 'SoSoValue Coin List API' ? 'SSV' : 'BTC'}
+                live={liveBreakdown.price}
+                tooltip={liveBreakdown.priceSource}
+              />
+            </div>
+          )}
+
+          {lastFetch && (
+            <span className="mi-last-fetch">
+              {lastFetch.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </span>
+          )}
+
           <button
-            type="button"
             className={`mi-refresh ${refreshing ? 'mi-refresh--spinning' : ''}`}
-            onClick={refresh}
+            onClick={() => fetchData(true)}
             disabled={refreshing}
-            aria-label="Refresh market intel"
+            title="Force refresh — bypasses 60s cache"
           >
-            <RefreshCcw size={13} />
-            {refreshing ? 'REFRESHING' : 'REFRESH'}
+            <RefreshCw size={11} />
+            {refreshing ? 'FETCHING…' : isLive ? 'LIVE' : 'REFRESH'}
           </button>
+
+          {/* Fixed the missing <a> opening tag here */}
+          <a
+            href="https://sosovalue.com"
+            target="_blank"
+            rel="noreferrer"
+            className="mi-powered"
+          >
+            SoSoValue <ExternalLink size={9} />
+          </a>
         </div>
       </div>
 
-      {loading ? (
-        <div className="mi-skeleton-body market-intel--skeleton">
-          <div className="mi-skeleton-block" />
-          <div className="mi-skeleton-block" />
-          <div className="mi-skeleton-block" />
+      {/* ── Main metric strip ──────────────────────────────────────── */}
+      <div className="mi-strip">
+        {/* BTC Price */}
+        <div className="mi-block">
+          <span className="mi-block-label">BTC PRICE</span>
+          <span className="mi-block-value mi-block-value--primary">
+            {data?.btc_price_usd
+              ? `$${Number(data.btc_price_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+              : '—'
+            }
+          </span>
+          <span className={`mi-block-sub ${btcPos ? 'mi-color--green' : 'mi-color--red'}`}>
+            {btcPos ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+            {btcPos ? '+' : ''}{(data?.btc_24h_change_pct ?? 0).toFixed(2)}%
+            {liveBreakdown.price && (
+              <span className="mi-live-dot-inline" title={liveBreakdown.priceSource}>●</span>
+            )}
+          </span>
         </div>
-      ) : error ? (
-        <div className="mi-error-body">
-          <strong>Market intel unavailable</strong>
-          <span>{error?.response?.data?.message || error?.message || 'Unexpected error'}</span>
+
+        <div className="mi-sep" />
+
+        {/* ETF Daily Flow */}
+        <div className="mi-block">
+          <span className="mi-block-label">BTC ETF DAILY FLOW</span>
+          <span className={`mi-block-value ${inflowPos ? 'mi-color--green' : 'mi-color--red'}`}>
+            {inflowPos ? '+' : ''}{fmtUSD(data?.btc_etf_daily_inflow_usd)}
+            {liveBreakdown.etf && (
+              <span className="mi-live-dot-inline mi-live-dot-inline--ssv" title="SoSoValue ETF API">●</span>
+            )}
+          </span>
+          <span className="mi-block-sub mi-color--dim">
+            AUM {fmtUSD(data?.btc_etf_total_assets_usd)}
+          </span>
         </div>
-      ) : (
-        <>
-          <div className="mi-strip">
-            <div className="mi-block">
-              <div className="mi-block-label">ETF DAILY INFLOW</div>
-              <div className="mi-block-value mi-block-value--primary">{formatCompactUSD(intel?.btc_etf_daily_inflow_usd)}</div>
-              <div className="mi-block-sub">
-                <span className="mi-color--dim">24h change:</span>
-                <span className={intel?.btc_24h_change_pct >= 0 ? 'mi-color--green' : 'mi-color--red'}>
-                  {intel?.btc_24h_change_pct != null ? `${intel.btc_24h_change_pct.toFixed(2)}%` : '—'}
-                </span>
-              </div>
-            </div>
 
-            <div className="mi-sep" />
+        <div className="mi-sep" />
 
-            <div className="mi-block">
-              <div className="mi-block-label">BTC PRICE</div>
-              <div className="mi-block-value">${intel?.btc_price_usd != null ? Number(intel.btc_price_usd).toLocaleString() : '—'}</div>
-              <div className="mi-block-sub">
-                <Database size={12} />
-                <span className="mi-color--dim">Liquidity tier:</span>
-                <span className="mi-color--amber">{intel?.sodex_liquidity_tier || '—'}</span>
-              </div>
-            </div>
+        {/* Cumulative ETF Inflow */}
+        <div className="mi-block">
+          <span className="mi-block-label">CUMULATIVE ETF INFLOW</span>
+          <span className={`mi-block-value ${(data?.btc_etf_cum_inflow_usd ?? 0) > 0 ? 'mi-color--green' : 'mi-color--red'}`}>
+            {(data?.btc_etf_cum_inflow_usd ?? 0) > 0 ? '+' : ''}{fmtUSD(data?.btc_etf_cum_inflow_usd)}
+          </span>
+          <span className="mi-block-sub mi-color--dim">Since ETF launch</span>
+        </div>
 
-            <div className="mi-sep" />
+        <div className="mi-sep" />
 
-            <div className="mi-block">
-              <div className="mi-block-label">SENTIMENT</div>
-              <div className="mi-block-value">{sentimentScore != null ? `${sentimentScore}/100` : '—'}</div>
-              <div className="mi-block-sub">
-                <span className={`mi-color--${band.label === 'BULLISH' ? 'green' : band.label === 'BEARISH' ? 'red' : 'amber'}`}>{band.label}</span>
-                <span className="mi-color--dim">/ news + flows</span>
-              </div>
-            </div>
+        {/* SoDEX TVL */}
+        <div className="mi-block">
+          <span className="mi-block-label">SoDEX TVL</span>
+          <span className="mi-block-value mi-color--amber">
+            {fmtUSD(data?.sodex_tvl_usd)}
+          </span>
+          <span className="mi-block-sub mi-color--dim">
+            Liquidity: {data?.sodex_liquidity_tier ?? '—'}
+          </span>
+        </div>
+      </div>
+
+      {/* ── Bottom: Sentiment + Tags ─────────────────────────────── */}
+      <div className="mi-bottom">
+        {/* Sentiment */}
+        <div className="mi-sentiment-col">
+          <div className="mi-sentiment-header">
+            <span className="mi-block-label">
+              AI NEWS SENTIMENT
+              {liveBreakdown.sentiment && (
+                <span className="mi-live-dot-inline mi-live-dot-inline--ssv" title="SoSoValue News API — live">●</span>
+              )}
+            </span>
+            {data?.articles_analysed > 0 && (
+              <span className="mi-articles-count">{data.articles_analysed} articles</span>
+            )}
           </div>
 
-          <div className="mi-bottom">
-            <div className="mi-sentiment-col">
-              <div className="mi-block-label">SENTIMENT TRACK</div>
-              <div className="mi-sentiment-track" aria-hidden="true">
-                <div className="mi-sentiment-fill" style={{ width: `${band.cursorPct}%` }} />
-                <div className="mi-sentiment-cursor" style={{ left: `${band.cursorPct}%` }} />
-              </div>
-              <div className="mi-sentiment-ends">
-                <span className="mi-sent-label mi-sent--bearish">BEARISH</span>
-                <span className="mi-sent-label mi-sent--neutral">NEUTRAL</span>
-                <span className="mi-sent-label mi-sent--bullish">BULLISH</span>
-              </div>
-
-              <div className="mi-headline">{intel?.top_news_headline || intel?.top_news_tags?.slice(0, 3).join(' · ') || '—'}</div>
-            </div>
-
-            <div />
-
-            <div className="mi-tags-col">
-              <div className="mi-block-label">TOP SIGNAL TAGS</div>
-              <div className="mi-tag-list">
-                {(intel?.top_news_tags || []).slice(0, 8).map((t) => (
-                  <span key={t} className="mi-tag">{t}</span>
-                ))}
-              </div>
-              <div className="mi-sources">
-                {(intel?.data_sources || []).slice(0, 3).map((s) => (
-                  <span key={s} className="mi-source-badge">{s}</span>
-                ))}
-              </div>
-              <a className="mi-powered" href="#" onClick={(e) => e.preventDefault()}>
-                {poweredBy}
-              </a>
-            </div>
+          <div className="mi-sentiment-track">
+            <div
+              className="mi-sentiment-fill"
+              style={{ width: `${data?.sentiment_score ?? 50}%` }}
+            />
+            <div
+              className="mi-sentiment-cursor"
+              style={{ left: `${data?.sentiment_score ?? 50}%` }}
+            />
           </div>
-        </>
+
+          <div className="mi-sentiment-ends">
+            <span className="mi-color--red">BEARISH</span>
+            <span className={`mi-sent-label mi-sent--${(data?.sentiment_label ?? 'neutral').toLowerCase()}`}>
+              {data?.sentiment_label ?? 'NEUTRAL'} {data?.sentiment_score ?? 50}/100
+            </span>
+            <span className="mi-color--green">BULLISH</span>
+          </div>
+
+          {data?.top_news_headline && (
+            <div className="mi-headline">"{data.top_news_headline}"</div>
+          )}
+        </div>
+
+        <div className="mi-sep mi-sep--vertical" />
+
+        {/* Tags + Sources */}
+        <div className="mi-tags-col">
+          <span className="mi-block-label">TRENDING SIGNALS</span>
+          <div className="mi-tag-list">
+            {(data?.top_news_tags ?? []).map(tag => (
+              <span key={tag} className="mi-tag">{tag}</span>
+            ))}
+          </div>
+          <div className="mi-sources">
+            {(data?.data_sources ?? []).map(s => (
+              <span key={s} className={`mi-source-badge ${s.includes('LIVE') ? 'mi-source-badge--live' : ''}`}>
+                {s.includes('LIVE') ? '● ' : ''}{s.replace(' — LIVE', '').replace(' — seeded', '')}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Footer — shows source mode + setup hint if no API key ── */}
+      {!isLive && (
+        <div className="mi-setup-hint">
+          <WifiOff size={11} />
+          <span>
+            Showing seeded data. To enable live SoSoValue feed:
+            add <code>VITE_SOSOVALUE_API_KEY</code> to your Vercel environment variables.
+          </span>
+          <a href="https://sosovalue.com/developer" target="_blank" rel="noreferrer">
+            Get API key <ExternalLink size={9} />
+          </a>
+        </div>
       )}
-    </section>
+    </div>
   )
 }
 
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function EndpointDot({ label, live, tooltip }) {
+  return (
+    <span
+      className={`mi-ep-dot ${live ? 'mi-ep-dot--live' : 'mi-ep-dot--dead'}`}
+      title={tooltip ?? (live ? `${label} — live` : `${label} — seeded`)}
+    >
+      {label}
+    </span>
+  )
+}
+
+const MISkeleton = () => (
+  <div className="market-intel market-intel--skeleton">
+    <div className="mi-accent-line mi-accent-line--seeded" />
+    <div className="mi-header">
+      <div className="mi-header-left">
+        <Activity size={12} className="mi-pulse-icon" />
+        <span className="mi-label">MARKET INTELLIGENCE</span>
+      </div>
+      <span className="mi-powered mi-color--dim">Fetching SoSoValue data…</span>
+    </div>
+    <div className="mi-skeleton-body">
+      {[1,2,3,4].map(i => <div key={i} className="mi-skeleton-block" />)}
+    </div>
+  </div>
+)
+
+const MIError = ({ message, onRetry }) => (
+  <div className="market-intel market-intel--error">
+    <div className="mi-accent-line mi-accent-line--seeded" />
+    <div className="mi-header">
+      <div className="mi-header-left">
+        <Zap size={12} className="mi-pulse-icon mi-pulse-icon--error" />
+        <span className="mi-label">MARKET INTELLIGENCE</span>
+      </div>
+      <button className="mi-refresh" onClick={onRetry}>
+        <RefreshCw size={11} /> RETRY
+      </button>
+    </div>
+    <div className="mi-error-body">
+      <span className="mi-color--red">{message}</span>
+      <span className="mi-color--dim">Check VITE_SOSOVALUE_API_KEY in your environment</span>
+    </div>
+  </div>
+)
