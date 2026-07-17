@@ -544,7 +544,7 @@ export const mockAuditPdf = async (resourceType, resourceId) => {
   return new Blob([lines.join('\n')], { type: 'application/pdf' })
 }
 console.log('--- VITE ENVIRONMENT KEY CHECK ---');
-console.log('VITE_SOSOVALUE_API_KEY value:', import.meta.env.VITE_SOSOVALUE_API_KEY);
+
 console.log('Is Vite detecting any envs:', !!import.meta.env);
 console.log('All public Vite envs:', Object.keys(import.meta.env));
 console.log('----------------------------------');
