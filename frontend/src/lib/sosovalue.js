@@ -190,7 +190,8 @@ export const fetchNewsSentiment = async () => {
                       []
 
       const tags     = rawTags.map(t => (typeof t === 'string' ? t : t?.name ?? t?.tag ?? '').toUpperCase())
-      const category = (item.category ?? item.type ?? '').toLowerCase()
+      // Change this line inside items.forEach:
+const category = String(item.category ?? item.type ?? '').toLowerCase()
       const weight   = CATEGORY_WEIGHTS[category] ?? 1
 
       tags.forEach(tag => {
