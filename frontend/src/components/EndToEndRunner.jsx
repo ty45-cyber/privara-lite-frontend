@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import {
   Play, CheckCircle, Loader, ArrowRight,
-  Zap, Lock, TrendingUp, ExternalLink,
+  Zap, TrendingUp, ExternalLink,
   Shield, FileText, Clock
 } from 'lucide-react'
 import api from '../lib/api'
@@ -46,13 +46,13 @@ const STEPS = [
 ]
 
 export default function EndToEndRunner() {
-  const [phase, setPhase]       = useState('idle')  // idle | running | done | error
+  const [phase, setPhase]             = useState('idle')  // idle | running | done | error
   const [currentStep, setCurrentStep] = useState(-1)
   const [stepResults, setStepResults] = useState({})
-  const [error, setError]       = useState(null)
-  const [txHash, setTxHash]     = useState(null)
-  const [requestId, setRequestId] = useState(null)
-  const abortRef                = useRef(false)
+  const [error, setError]             = useState(null)
+  const [txHash, setTxHash]           = useState(null)
+  const [requestId, setRequestId]     = useState(null)
+  const abortRef                      = useRef(false)
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
@@ -128,11 +128,11 @@ export default function EndToEndRunner() {
       setStepResults(r => ({
         ...r,
         execute: {
-          ok:      true,
+          ok:       true,
           label:   'Settled on ValueChain Mainnet',
           detail:  `TX: ${receipt?.tx_hash?.slice(0, 18)}… · Block: #${receipt?.block_number?.toLocaleString()}`,
           txHash:  receipt?.tx_hash,
-          explorer:receipt?.explorer_url,
+          explorer: receipt?.explorer_url,
           ssv:     true,
         },
       }))
@@ -259,7 +259,7 @@ export default function EndToEndRunner() {
                   <span className="e2e-result-detail">{result.detail}</span>
                 </div>
                 {result.txHash && (
-                  
+                  <a
                     href={result.explorer}
                     target="_blank"
                     rel="noreferrer"
@@ -297,7 +297,7 @@ export default function EndToEndRunner() {
                 </div>
                 <div className="e2e-success-row">
                   <span className="e2e-success-label">EXPLORER</span>
-                  
+                  <a
                     href={`https://scan.valuechain.io/tx/${txHash}`}
                     target="_blank"
                     rel="noreferrer"
