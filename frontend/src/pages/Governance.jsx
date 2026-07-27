@@ -10,6 +10,7 @@ import Badge                    from '../components/Badge'
 import Modal                    from '../components/Modal'
 import Input, { Textarea }      from '../components/Input'
 import AgentPanel               from '../components/AgentPanel'
+import GovernanceUpgrade from '../components/GovernanceUpgrade'
 import './Governance.css'
 
 export default function Governance() {
@@ -24,6 +25,8 @@ export default function Governance() {
   const [loading, setLoading]         = useState(false)
   const [voting, setVoting]           = useState({})
   const [form, setForm] = useState({ title: '', description: '', voting_ends_at: '' })
+  const [currentProposal, setCurrentProposal] = useState(null)
+const [currentTally, setCurrentTally]       = useState(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -31,6 +34,15 @@ export default function Governance() {
     api.get('/governance/proposals').then(r => setProposals(r.data.proposals || []))
 
   useEffect(() => { fetchProposals() }, [])
+  useEffect(() => {
+  api.get('/governance/proposals').then(r => {
+    const props = r.data.proposals || []
+    setProposals(props)
+    // Set current active proposal for GovernanceUpgrade
+    const active = props.find(p => p.status === 'active')
+    if (active) setCurrentProposal(active)
+  })
+}, [])
 
   // Deep-link: ?proposal=prop_001&action=tally
   useEffect(() => {
@@ -97,6 +109,11 @@ export default function Governance() {
           )
         }
       />
+      {/* Governance upgrade — addresses admin single-point-of-control concern */}
+<GovernanceUpgrade
+  proposal={currentProposal}
+  tally={currentProposal ? _tallies?.[currentProposal.id] : null}
+/>
 
       <div className="proposals-grid">
         {proposals.length === 0 && (

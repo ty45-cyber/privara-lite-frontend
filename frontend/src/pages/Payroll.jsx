@@ -9,6 +9,7 @@ import Badge      from '../components/Badge'
 import Table      from '../components/Table'
 import Modal      from '../components/Modal'
 import Input      from '../components/Input'
+import { toast } from '../components/Toast'
 import './Payroll.css'
 
 export default function Payroll() {
@@ -199,7 +200,10 @@ export default function Payroll() {
         </div>
       )}
 
-      <Modal open={uploadModal} onClose={() => { setUploadModal(false); setPriyaResult(null) }} title="UPLOAD PAYROLL BATCH" width={440}>
+      <Modal open={uploadModal} onClose={() => { setUploadModal(false); setUploadModal(false)
+fetchBatches()
+toast.success('Payroll encrypted', `${newBatch.total_records} records secured with AES-256-GCM`)
+ }} title="UPLOAD PAYROLL BATCH" width={440}>
         <div className="upload-form">
           <Input
             label="BATCH NAME"

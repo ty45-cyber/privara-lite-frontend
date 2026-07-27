@@ -10,6 +10,8 @@ import SentinelBanner    from '../components/SentinelBanner'
 import CompanyStory      from '../components/CompanyStory'
 import AccuracyHero      from '../components/AccuracyHero'
 import EcosystemScore    from '../components/EcosystemScore'
+import LiveAPIVerifier from '../components/LiveAPIVerifier'
+import EndToEndRunner  from '../components/EndToEndRunner'
 import './Dashboard.css'
 
 
@@ -47,7 +49,16 @@ export default function Dashboard() {
       />
 
       {/* Sentinel — proactive AI risk monitor, no button required */}
-      <SentinelBanner />
+      <SentinelBanner /> 
+
+      <WorkflowUnity />
+      {/* Live API verification — judges can verify in network tab */}
+<LiveAPIVerifier />
+
+{/* End-to-end flow runner — 90 seconds, zero guidance */}
+{['admin', 'finance'].includes(user?.role) && (
+  <EndToEndRunner />
+)}
 
       {/* Company story */}
       <CompanyStory variant="dashboard" />

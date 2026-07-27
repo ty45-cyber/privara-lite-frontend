@@ -3,16 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PRIVARA — Confidential Operations Hub</title>
+    <meta name="description" content="Privara Lite — Confidential Financial Operations Hub. Treasury approvals gated by live SoSoValue institutional intelligence." />
+    <meta name="theme-color" content="#06080c" />
+
+    <!-- Preconnect to SoSoValue APIs for faster first load -->
+    <link rel="preconnect" href="https://api.sosovalue.xyz" />
+    <link rel="preconnect" href="https://openapi.sosovalue.com" />
+
+    <!-- IBM Plex Mono — primary typeface -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,400&display=swap"
       rel="stylesheet"
     />
+
+    <title>Privara Lite — Confidential Financial Operations</title>
+
+    <!-- Prevent FOUC — inline critical CSS -->
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body, #root {
+        min-height: 100vh;
+        background: #06080c;
+        color: #e8eaf0;
+        font-family: 'IBM Plex Mono', monospace;
+      }
+      /* Loading state shown before React mounts */
+      #root:empty::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: #06080c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <!-- IMPORTANT: type="module" is required for Vite -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

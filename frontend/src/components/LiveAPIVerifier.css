@@ -1,0 +1,319 @@
+.lav-panel {
+  background:    var(--surface);
+  border:        1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow:      hidden;
+  margin-bottom: 24px;
+}
+
+.lav-header {
+  display:        flex;
+  align-items:    center;
+  justify-content:space-between;
+  padding:        12px 16px;
+  background:     var(--void);
+  border-bottom:  1px solid var(--border);
+  gap:            12px;
+  flex-wrap:      wrap;
+}
+
+.lav-header-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+
+.lav-icon { color: var(--amber); animation: pulse-amber 2s ease infinite; }
+
+.lav-title-block { display: flex; flex-direction: column; gap: 2px; }
+.lav-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; color: var(--amber); }
+.lav-sub   { font-size: 0.56rem; color: var(--text-dim); }
+
+.lav-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+.lav-status-badge {
+  display:     inline-flex;
+  align-items: center;
+  gap:         5px;
+  font-size:   0.56rem;
+  letter-spacing:0.1em;
+  font-weight: 600;
+  padding:     3px 9px;
+  border-radius:2px;
+  border:      1px solid;
+}
+
+.lav-status-badge--live    { color: var(--green); border-color: rgba(46,168,126,0.4); background: var(--green-dim); animation: pulse-amber 2s ease infinite; }
+.lav-status-badge--partial { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
+
+.lav-last-run { font-size: 0.56rem; color: var(--text-dim); }
+
+.lav-run-all {
+  display:     inline-flex;
+  align-items: center;
+  gap:         6px;
+  padding:     6px 14px;
+  background:  var(--amber);
+  border:      none;
+  border-radius:var(--radius);
+  color:       var(--obsidian);
+  font-family: var(--font-mono);
+  font-size:   0.62rem;
+  font-weight: 700;
+  letter-spacing:0.1em;
+  cursor:      pointer;
+  transition:  all 0.15s;
+}
+
+.lav-run-all:hover:not(:disabled) { filter: brightness(1.1); }
+.lav-run-all:disabled              { opacity: 0.5; cursor: not-allowed; }
+.lav-run-all--running              { background: var(--amber-dim); color: var(--amber); }
+
+.lav-spin { animation: spin 0.6s linear infinite; }
+
+/* Instruction */
+.lav-instruction {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+  padding:        10px 16px;
+  background:     rgba(232,160,32,0.04);
+  border-bottom:  1px solid var(--border);
+  border-left:    4px solid var(--amber-dim);
+}
+
+.lav-instruction-label {
+  font-size:      0.52rem;
+  letter-spacing: 0.16em;
+  color:          var(--amber);
+}
+
+.lav-instruction-text {
+  font-size:  0.64rem;
+  color:      var(--text-secondary);
+  line-height:1.5;
+}
+
+.lav-instruction-text a {
+  color:      var(--amber);
+  text-decoration: none;
+  display:    inline-flex;
+  align-items:center;
+  gap:        3px;
+}
+
+/* Endpoints */
+.lav-endpoints { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+
+.lav-ep {
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  overflow:      hidden;
+  transition:    border-color 0.15s;
+}
+
+.lav-ep--success { border-color: rgba(46,168,126,0.3); }
+.lav-ep--error   { border-color: rgba(200,75,60,0.3);  }
+.lav-ep--idle    { border-color: var(--border); }
+
+.lav-ep-header {
+  display:        flex;
+  align-items:    flex-start;
+  justify-content:space-between;
+  padding:        11px 13px;
+  gap:            10px;
+  transition:     background 0.12s;
+  cursor:         default;
+}
+
+.lav-ep--success .lav-ep-header { background: rgba(46,168,126,0.03); }
+.lav-ep--error   .lav-ep-header { background: rgba(200,75,60,0.03);  }
+
+.lav-ep-left {
+  display:     flex;
+  align-items: flex-start;
+  gap:         10px;
+  flex:        1;
+  min-width:   0;
+}
+
+.lav-ep-icon            { flex-shrink: 0; margin-top: 2px; color: var(--text-dim); }
+.lav-ep-icon--success   { color: var(--green); }
+.lav-ep-icon--error     { color: var(--red); }
+.lav-ep-icon--idle      { color: var(--text-dim); }
+
+.lav-ep-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+
+.lav-ep-name-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  flex-wrap:   wrap;
+}
+
+.lav-ep-method {
+  font-size:      0.54rem;
+  letter-spacing: 0.1em;
+  font-weight:    700;
+  padding:        1px 5px;
+  border-radius:  2px;
+}
+
+.lav-ep-method--post { color: var(--amber); background: var(--amber-glow); border: 1px solid var(--amber-dim); }
+.lav-ep-method--get  { color: var(--green); background: var(--green-dim);   border: 1px solid rgba(46,168,126,0.3); }
+
+.lav-ep-name    { font-size: 0.68rem; color: var(--text-primary); font-weight: 500; }
+
+.lav-ep-latency {
+  font-size:   0.56rem;
+  color:       var(--green);
+  padding:     1px 5px;
+  border:      1px solid rgba(46,168,126,0.3);
+  border-radius:2px;
+  background:  var(--green-dim);
+}
+
+.lav-ep-url {
+  font-size:   0.58rem;
+  color:       var(--text-dim);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow:    hidden;
+  text-overflow:ellipsis;
+}
+
+.lav-ep-desc {
+  font-size:  0.6rem;
+  color:      var(--text-secondary);
+  line-height:1.4;
+}
+
+.lav-ep-right {
+  display:     flex;
+  align-items: flex-start;
+  gap:         6px;
+  flex-shrink: 0;
+}
+
+.lav-ep-run {
+  padding:     4px 10px;
+  background:  none;
+  border:      1px solid var(--border-bright);
+  border-radius:var(--radius);
+  color:       var(--text-dim);
+  font-family: var(--font-mono);
+  font-size:   0.58rem;
+  letter-spacing:0.1em;
+  cursor:      pointer;
+  transition:  all 0.15s;
+  white-space: nowrap;
+}
+
+.lav-ep-run:hover:not(:disabled) { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
+.lav-ep-run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.lav-ep-expand {
+  background:  none;
+  border:      none;
+  color:       var(--text-dim);
+  cursor:      pointer;
+  padding:     4px;
+  display:     flex;
+  align-items: center;
+}
+
+.lav-ep-expand:hover { color: var(--text-primary); }
+
+/* Endpoint body */
+.lav-ep-body {
+  padding:     12px;
+  background:  var(--void);
+  border-top:  1px solid var(--border);
+  animation:   fadeUp 0.2s ease;
+}
+
+.lav-ep-error-msg {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            8px;
+  font-size:      0.65rem;
+  color:          var(--red);
+  flex-direction: column;
+}
+
+.lav-ep-error-msg svg { color: var(--red); }
+
+.lav-ep-error-hint {
+  font-size:  0.6rem;
+  color:      var(--amber);
+  font-style: italic;
+}
+
+/* Key fields */
+.lav-key-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+.lav-key-fields-label {
+  font-size:      0.52rem;
+  letter-spacing: 0.14em;
+  color:          var(--text-dim);
+}
+
+.lav-key-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap:                   6px;
+}
+
+.lav-key-item {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+  padding:        8px 10px;
+  background:     var(--surface-2);
+  border:         1px solid var(--border);
+  border-radius:  var(--radius);
+}
+
+.lav-key-name { font-size: 0.52rem; letter-spacing: 0.1em; color: var(--text-dim); }
+.lav-key-val  { font-size: 0.72rem; color: var(--green); font-weight: 600; }
+
+/* Response JSON */
+.lav-response-label {
+  font-size:      0.52rem;
+  letter-spacing: 0.12em;
+  color:          var(--text-dim);
+  margin-bottom:  6px;
+}
+
+.lav-response-json {
+  background:    var(--obsidian);
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  padding:       10px;
+  font-family:   var(--font-mono);
+  font-size:     0.6rem;
+  color:         var(--text-secondary);
+  line-height:   1.6;
+  overflow-x:    auto;
+  max-height:    200px;
+  overflow-y:    auto;
+  white-space:   pre;
+}
+
+/* Footer */
+.lav-footer {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  padding:     9px 16px;
+  background:  var(--void);
+  border-top:  1px solid var(--border);
+  font-size:   0.54rem;
+  color:       var(--text-dim);
+  letter-spacing:0.06em;
+  flex-wrap:   wrap;
+}
+
+.lav-footer svg { color: var(--amber); }
+.lav-footer a   { color: var(--amber); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
+
+@media (max-width: 640px) {
+  .lav-key-grid { grid-template-columns: repeat(2, 1fr); }
+  .lav-ep-url   { display: none; }
+}

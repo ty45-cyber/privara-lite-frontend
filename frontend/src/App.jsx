@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { isAuthenticated } from './lib/auth'
+import { ToastProvider }   from './components/Toast'
 import Landing    from './pages/Landing'
 import Login      from './pages/Login'
 import Register   from './pages/Register'
@@ -15,28 +16,30 @@ const PrivateRoute = ({ children }) =>
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/"         element={<Landing />} />
-        <Route path="/login"    element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/app"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index           element={<Navigate to="/app/dashboard" replace />} />
-          <Route path="dashboard"  element={<Dashboard />} />
-          <Route path="payroll"    element={<Payroll />} />
-          <Route path="treasury"   element={<Treasury />} />
-          <Route path="governance" element={<Governance />} />
-          <Route path="audit"      element={<Audit />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/"         element={<Landing />} />
+          <Route path="/login"    element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/app"
+            element={
+              <PrivateRoute>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route index             element={<Navigate to="/app/dashboard" replace />} />
+            <Route path="dashboard"  element={<Dashboard />} />
+            <Route path="payroll"    element={<Payroll />} />
+            <Route path="treasury"   element={<Treasury />} />
+            <Route path="governance" element={<Governance />} />
+            <Route path="audit"      element={<Audit />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   )
 }

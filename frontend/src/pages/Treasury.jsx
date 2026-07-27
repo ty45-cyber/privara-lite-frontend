@@ -17,6 +17,8 @@ import SocatisReports from '../components/SocatisReports'
 import ValueChainSettle from '../components/ValueChainSettle'
 import ApprovalIntelligence from '../components/ApprovalIntelligence'
 import './Treasury.css'
+import WorkflowUnity    from '../components/WorkflowUnity'
+import CalibrationProof from '../components/CalibrationProof'
 
 export default function Treasury() {
   const user = getUser()
@@ -222,6 +224,7 @@ export default function Treasury() {
             value={form.title}
             onChange={set('title')}
             placeholder="Q3 Marketing Campaign"
+            <CalibrationProof />
           />
           <div className="form-row">
             <Input
