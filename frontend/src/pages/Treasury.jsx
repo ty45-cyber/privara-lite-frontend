@@ -214,18 +214,25 @@ export default function Treasury() {
 
       {/* ── Create Modal ─────────────────────────────────────────── */}
       <Modal
-        open={createModal}
-        onClose={() => setCreateModal(false)}
-        title="CREATE TREASURY REQUEST"
-      >
-        <div className="treasury-form">
-          <Input
-            label="TITLE"
-            value={form.title}
-            onChange={set('title')}
-            placeholder="Q3 Marketing Campaign"
-            <CalibrationProof />
-          />
+  open={createModal}
+  onClose={() => setCreateModal(false)}
+  title="CREATE TREASURY REQUEST"
+>
+  <div className="treasury-form">
+    <Input
+      label="TITLE"
+      value={form.title}
+      onChange={set('title')}
+      placeholder="Q3 Marketing Campaign"
+    />
+    <CalibrationProof />
+
+    {/* Keep your form rows and remaining inputs below this line: */}
+    <div className="form-row">
+      {/* ... your other inputs and buttons ... */}
+    </div>
+  </div>
+</Modal>
           <div className="form-row">
             <Input
               label="AMOUNT"
