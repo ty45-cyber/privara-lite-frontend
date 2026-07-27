@@ -1,6 +1,6 @@
-import React    from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App      from './App.jsx'
+import App from './App.jsx'
 import './styles/global.css'
 
 // ── Safety net — catch any top-level render crash ─────────────────────────────
@@ -81,7 +81,7 @@ class ErrorBoundary extends React.Component {
           </button>
           <div style={{ fontSize: '0.58rem', color: '#4a5168' }}>
             Demo: Enter as Finance CFO →{' '}
-            
+            <a
               href="/?demo=finance"
               style={{ color: '#e8a020' }}
             >
