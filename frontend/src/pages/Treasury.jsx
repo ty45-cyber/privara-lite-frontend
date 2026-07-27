@@ -16,19 +16,18 @@ import SSIIntelligence from '../components/SSIIntelligence'
 import SocatisReports from '../components/SocatisReports'
 import ValueChainSettle from '../components/ValueChainSettle'
 import ApprovalIntelligence from '../components/ApprovalIntelligence'
-import './Treasury.css'
-import WorkflowUnity    from '../components/WorkflowUnity'
 import CalibrationProof from '../components/CalibrationProof'
+import './Treasury.css'
 
 export default function Treasury() {
   const user = getUser()
   const canCreate = ['admin', 'finance'].includes(user?.role)
   const canApprove = ['admin', 'finance'].includes(user?.role)
 
-  const [requests, setRequests]     = useState([])
+  const [requests, setRequests] = useState([])
   const [createModal, setCreateModal] = useState(false)
-  const [riskModal, setRiskModal]   = useState(false)
-  const [risk, setRisk]             = useState(null)
+  const [riskModal, setRiskModal] = useState(false)
+  const [risk, setRisk] = useState(null)
   const [currentRiskId, setCurrentRiskId] = useState(null)
 
   // Spend category detection
@@ -36,8 +35,8 @@ export default function Treasury() {
   const [currentRiskAmount, setCurrentRiskAmount] = useState('')
   const [currentRiskCurrency, setCurrentRiskCurrency] = useState('USD')
 
-  const [loading, setLoading]       = useState(false)
-  const [form, setForm]             = useState({
+  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({
     title: '',
     amount: '',
     currency: 'USD',
@@ -50,16 +49,18 @@ export default function Treasury() {
   const fetchRequests = () =>
     api.get('/treasury/requests').then((r) => setRequests(r.data.requests || []))
 
-  useEffect(() => { fetchRequests() }, [])
+  useEffect(() => {
+    fetchRequests()
+  }, [])
 
   // Deep-link support: ?highlight=treq_009 auto-opens that request's risk modal
   useEffect(() => {
     const highlightId = searchParams.get('highlight')
     if (!highlightId || requests.length === 0) return
 
-    const target = requests.find(r => r.id === highlightId)
+    const target = requests.find((r) => r.id === highlightId)
     if (target) {
-      openRisk(highlightId, target)
+      openRisk(highlightId)
       searchParams.delete('highlight')
       setSearchParams(searchParams, { replace: true })
     }
@@ -105,7 +106,7 @@ export default function Treasury() {
   }
 
   const openRisk = async (id) => {
-    const row = requests.find(r => r.id === id)
+    const row = requests.find((r) => r.id === id)
 
     setRisk(null)
     setCurrentRiskId(id)
@@ -123,17 +124,14 @@ export default function Treasury() {
     }
   }
 
-
   const highlightedId = searchParams.get('highlight')
 
   const cols = [
     {
-      key:    'title',
-      label:  'TITLE',
+      key: 'title',
+      label: 'TITLE',
       render: (v, r) => (
-        <span className={r.id === highlightedId ? 'row-highlighted' : ''}>
-          {v}
-        </span>
+        <span className={r.id === highlightedId ? 'row-highlighted' : ''}>{v}</span>
       ),
     },
     {
@@ -200,7 +198,7 @@ export default function Treasury() {
         }
       />
 
-      {/* Autonomous Financial Loop — addresses judge concern directly */}
+      {/* Autonomous Financial Loop */}
       <AutonomousLoop />
 
       <Table
@@ -214,25 +212,19 @@ export default function Treasury() {
 
       {/* ── Create Modal ─────────────────────────────────────────── */}
       <Modal
-  open={createModal}
-  onClose={() => setCreateModal(false)}
-  title="CREATE TREASURY REQUEST"
->
-  <div className="treasury-form">
-    <Input
-      label="TITLE"
-      value={form.title}
-      onChange={set('title')}
-      placeholder="Q3 Marketing Campaign"
-    />
-    <CalibrationProof />
+        open={createModal}
+        onClose={() => setCreateModal(false)}
+        title="CREATE TREASURY REQUEST"
+      >
+        <div className="treasury-form">
+          <Input
+            label="TITLE"
+            value={form.title}
+            onChange={set('title')}
+            placeholder="Q3 Marketing Campaign"
+          />
+          <CalibrationProof />
 
-    {/* Keep your form rows and remaining inputs below this line: */}
-    <div className="form-row">
-      {/* ... your other inputs and buttons ... */}
-    </div>
-  </div>
-</Modal>
           <div className="form-row">
             <Input
               label="AMOUNT"
@@ -249,12 +241,14 @@ export default function Treasury() {
               placeholder="USD"
             />
           </div>
+
           <Input
             label="PURPOSE"
             value={form.purpose}
             onChange={set('purpose')}
             placeholder="Business justification for this spend"
           />
+
           <Input
             label="REQUIRED APPROVALS"
             type="number"
@@ -263,6 +257,7 @@ export default function Treasury() {
             value={form.required_approvals}
             onChange={set('required_approvals')}
           />
+
           <Button
             variant="primary"
             size="lg"
@@ -278,7 +273,11 @@ export default function Treasury() {
       {/* ── Risk Modal ───────────────────────────────────────────── */}
       <Modal
         open={riskModal}
-        onClose={() => { setRiskModal(false); setRisk(null); setCurrentRiskId(null) }}
+        onClose={() => {
+          setRiskModal(false)
+          setRisk(null)
+          setCurrentRiskId(null)
+        }}
         title="TREASURY RISK INTELLIGENCE"
         width={420}
       >
@@ -296,18 +295,12 @@ export default function Treasury() {
             </div>
 
             <div className="risk-metrics">
-              <RiskMetric
-                label="MARKET SENTIMENT"
-                value={risk.market_sentiment}
-              />
+              <RiskMetric label="MARKET SENTIMENT" value={risk.market_sentiment} />
               <RiskMetric
                 label="ETF FLOW PROXY"
                 value={`${risk.market_volatility_pct?.toFixed(2)}%`}
               />
-              <RiskMetric
-                label="LIQUIDITY DEPTH"
-                value={risk.liquidity_depth}
-              />
+              <RiskMetric label="LIQUIDITY DEPTH" value={risk.liquidity_depth} />
             </div>
 
             <div className="risk-recommendation">
@@ -317,11 +310,7 @@ export default function Treasury() {
 
             <div className="risk-attribution">
               <span>Signal source: </span>
-              <a
-                href="https://sosovalue.com"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://sosovalue.com" target="_blank" rel="noreferrer">
                 SoSoValue API
               </a>
               <span> — BTC Spot ETF flows + AI news sentiment</span>
@@ -337,28 +326,22 @@ export default function Treasury() {
               currency={currentRiskCurrency}
             />
 
-            {/* Unified SoSoValue Signal Engine — replaces single-signal Felix */}
-{currentRiskId && (
-  <ApprovalIntelligence requestId={currentRiskId} />
-)}
-
+            {/* Unified SoSoValue Signal Engine */}
+            {currentRiskId && <ApprovalIntelligence requestId={currentRiskId} />}
 
             {/* Socatis AI research reports relevant to this request */}
-            {currentRiskId && (
-              <SocatisReports tags={['ETF', 'INSTITUTIONAL', 'BTC']} />
-            )}
+            {currentRiskId && <SocatisReports tags={['ETF', 'INSTITUTIONAL', 'BTC']} />}
 
-            {/* ValueChain settlement — SoSoValue's own L1 */}
+            {/* ValueChain settlement */}
             {currentRiskId && (
               <ValueChainSettle
                 requestId={currentRiskId}
                 amount={currentRiskAmount}
                 currency={currentRiskCurrency}
-                status={requests.find(r => r.id === currentRiskId)?.status}
+                status={requests.find((r) => r.id === currentRiskId)?.status}
               />
             )}
           </div>
-
         )}
       </Modal>
     </div>
@@ -369,8 +352,9 @@ function MacroWindow({ requestId }) {
   const [window, setWindow] = useState(null)
 
   useEffect(() => {
-    api.get(`/treasury/requests/${requestId}/window`)
-      .then(r => setWindow(r.data))
+    api
+      .get(`/treasury/requests/${requestId}/window`)
+      .then((r) => setWindow(r.data))
       .catch(() => {})
   }, [requestId])
 
@@ -420,4 +404,3 @@ function detectCategory(purpose) {
   if (p.includes('research') || p.includes('data') || p.includes('analyt')) return 'research'
   return 'default'
 }
-
