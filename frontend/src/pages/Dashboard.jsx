@@ -10,14 +10,15 @@ import SentinelBanner    from '../components/SentinelBanner'
 import CompanyStory      from '../components/CompanyStory'
 import AccuracyHero      from '../components/AccuracyHero'
 import EcosystemScore    from '../components/EcosystemScore'
-import LiveAPIVerifier from '../components/LiveAPIVerifier'
-import EndToEndRunner  from '../components/EndToEndRunner'
+import LiveAPIVerifier   from '../components/LiveAPIVerifier'
+import EndToEndRunner    from '../components/EndToEndRunner'
+import WorkflowUnity     from '../components/WorkflowUnity' // <-- Added missing import
 import './Dashboard.css'
 
 
 export default function Dashboard() {
   const user = getUser()
-  const [data, setData]     = useState({ batches: [], requests: [], proposals: [], logs: [] })
+  const [data, setData]       = useState({ batches: [], requests: [], proposals: [], logs: [] })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Dashboard() {
       api.get('/payroll/batches').catch(() => ({ data: { batches:   [] } })),
       api.get('/treasury/requests').catch(() => ({ data: { requests: [] } })),
       api.get('/governance/proposals').catch(() => ({ data: { proposals: [] } })),
-      api.get('/audit/logs').catch(() => ({ data: { logs: [] } })),
+      api.get('/audit/logs').catch(() => ({ data: { logs:      [] } })),
     ]).then(([b, t, g, l]) => {
       setData({
         batches:   b.data.batches   || [],
@@ -52,13 +53,14 @@ export default function Dashboard() {
       <SentinelBanner /> 
 
       <WorkflowUnity />
-      {/* Live API verification — judges can verify in network tab */}
-<LiveAPIVerifier />
 
-{/* End-to-end flow runner — 90 seconds, zero guidance */}
-{['admin', 'finance'].includes(user?.role) && (
-  <EndToEndRunner />
-)}
+      {/* Live API verification — judges can verify in network tab */}
+      <LiveAPIVerifier />
+
+      {/* End-to-end flow runner — 90 seconds, zero guidance */}
+      {['admin', 'finance'].includes(user?.role) && (
+        <EndToEndRunner />
+      )}
 
       {/* Company story */}
       <CompanyStory variant="dashboard" />
@@ -69,7 +71,6 @@ export default function Dashboard() {
       <EcosystemScore />
 
       {/* Live SoSoValue market intelligence */}
-
       <MarketIntel />
 
       {/* Stats */}
